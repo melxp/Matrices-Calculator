@@ -61,7 +61,60 @@ public class Matrix {
                 result[j][i] = matrixOne[i][j];
             }
         }
-           result;
+        return result;
+    }
+
+    public static int determinant(int[][] matrixOne) {
+
+        int n = matrixOne.length;
+        int determinant = 0;
+
+        if (n == 1) {
+            return matrixOne[0][0];
+        }
+
+        if (n == 2) {
+            determinant = matrixOne[0][0]*matrixOne[1][1] - matrixOne[0][1]*matrixOne[1][0];
+            return determinant;
+        }
+
+        for (int column = 0; column < n; column++) {
+            int sign = (column % 2 == 0) ? 1 : -1;
+
+            determinant += sign * matrixOne[0][column] * determinant(getMinor(matrixOne, 0, column));
+        }
+
+        return determinant;
+    }
+
+    private static int[][] getMinor(int[][] matrixOne, int row, int column) {
+        int[][] minor = new int[matrixOne.length - 1][matrixOne.length - 1];
+
+        int r = 0;
+        for (int i = 0; i < matrixOne.length; i++) {
+            if (i == row) continue;
+
+            int c = 0;
+            for (int j = 0; j < matrixOne.length; j++) {
+                if (j == column) continue;
+
+                minor[r][c] = matrixOne[i][j];
+                c++;
+            }
+            r++;
+        }
+        return minor;
+    }
+
+    public static int[][] diagonalize(int[][] matrixOne, r1, c1) {
+        int[][] temp = new int[r1][c1];
+        for (int i = 0; i < r1; i++) {
+            for (int j = 0; j < c1; j++) {
+                temp[i][j] = matrixOne[i][j];
+            }
+        }
+
+        
     }
 
 
@@ -105,7 +158,7 @@ public class Matrix {
             }
         }
 
-        System.out.println("Menu: \n 1. Addition \n 2. Subtraction \n 3. Scalar Multiplication \n 4. Matrix Multiplication \n 5. Transpose");
+        System.out.println("Menu: \n 1. Addition \n 2. Subtraction \n 3. Scalar Multiplication \n 4. Matrix Multiplication \n 5. Transpose \n 6. Determinant\n 7. Gaussian Elimination");
         int menuChoice = scanner.nextInt();
 
         if (menuChoice == 1 && equalSize) {
@@ -164,6 +217,24 @@ public class Matrix {
             for (int i = 0; i < r1; i++) {
                 for (int j = 0; j < c2; j++) {
                     System.out.println(transposeResult[i][j]);
+                }
+            }
+        }
+
+        if (menuChoice == 6) {
+            if (r1 == c1) {
+                int determinant = determinant(matrixOne);
+                System.out.println(determinant); 
+            } else {
+                System.out.println("The determinant can only be calculated for square matrices");
+            }
+        }
+
+        if (menuChoice == 7) {
+            int[][]diagonalized = diagonalize(matrixOne, r1, c1);
+            for (int i = 0; i < r1; i++) {
+                for (int j = 0; j < c2; j++) {
+                    System.out.println(diagonalized[i][j]);
                 }
             }
         }
