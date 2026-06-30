@@ -106,7 +106,7 @@ public class Matrix {
         return minor;
     }
 
-    public static int[][] diagonalize(int[][] matrixOne, r1, c1) {
+    public static int[][] diagonalize(int[][] matrixOne, int r1, int c1) {
         int[][] temp = new int[r1][c1];
         for (int i = 0; i < r1; i++) {
             for (int j = 0; j < c1; j++) {
@@ -114,7 +114,7 @@ public class Matrix {
             }
         }
 
-        
+        return temp;
     }
 
 

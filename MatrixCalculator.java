@@ -5,6 +5,12 @@ public class MatrixCalculator {
 
     private JFrame calculatorFrame;
 
+    private JPanel matrixPanel;
+    private JPanel matrixPanel2;
+
+    private JTextField[][] matrixFields;
+    private JTextField[][] matrixFields2;
+
     public MatrixCalculator() {
 
         // Create calculator window frame
@@ -42,18 +48,36 @@ public class MatrixCalculator {
         JSpinner colSpinner = new JSpinner (new SpinnerNumberModel(2, 1, 10, 1));
         
         JButton createMatrixButton = new JButton("Create Matrix");
+        createMatrixButton.addActionListener(e -> {
+            int rows = (Integer) rowSpinner.getValue();
+            int cols = (Integer) colSpinner.getValue();
+            matrixFields = createMatrixGrid(matrixPanel, rows, cols);
+        });
 
-        JPanel matrixPanel = new JPanel();
-        matrixPanel.setPreferredSize(new Dimension(200, 150));
+        matrixPanel = new JPanel();
+        matrixPanel.setPreferredSize(new Dimension(200, 200));
         matrixPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-        // Operations
-        JButton addButton = new JButton("Addition");
-        JButton subtractButton = new JButton("Subtraction");
-        JButton multiplyButton = new JButton("Multiply");
-        JButton transposeButton = new JButton("Transpose");
-        JButton determinantButton = new JButton("Determinant");
-        JButton gaussianButton = new JButton("Guassian Elimination");
+        // Matrix 2
+        JLabel matrixLabel2 = new JLabel("Matrix 2");
+        matrixLabel2.setFont(new Font("Monospaced", Font.BOLD, 18));
+
+        JLabel rowLabel2 = new JLabel("Rows");
+        JSpinner rowSpinner2 = new JSpinner (new SpinnerNumberModel(2, 1, 10, 1));
+        
+        JLabel colLabel2 = new JLabel("Columns");
+        JSpinner colSpinner2 = new JSpinner (new SpinnerNumberModel(2, 1, 10, 1));
+        
+        JButton createMatrixButton2 = new JButton("Create Matrix");
+        createMatrixButton2.addActionListener(e -> {
+            int rows2 = (Integer) rowSpinner2.getValue();
+            int cols2 = (Integer) colSpinner2.getValue();
+            matrixFields2 = createMatrixGrid(matrixPanel2, rows2, cols2);
+        });
+
+        matrixPanel2 = new JPanel();
+        matrixPanel2.setPreferredSize(new Dimension(200, 200));
+        matrixPanel2.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
         JButton backButton = new JButton("Back");
 
@@ -83,12 +107,26 @@ public class MatrixCalculator {
 
         panel.add(Box.createVerticalStrut(10));
 
-        panel.add(addButton);
-        panel.add(subtractButton);
-        panel.add(multiplyButton);
-        panel.add(transposeButton);
-        panel.add(determinantButton);
-        panel.add(gaussianButton);
+        panel.add(matrixLabel2);
+        panel.add(Box.createVerticalStrut(10));
+
+        panel.add(rowLabel2);
+        panel.add(rowSpinner2);
+
+        panel.add(Box.createVerticalStrut(10));
+
+        panel.add(colLabel2);
+        panel.add(colSpinner2);
+
+        panel.add(Box.createVerticalStrut(10));
+
+        panel.add(createMatrixButton2);
+
+        panel.add(Box.createVerticalStrut(10));
+
+        panel.add(matrixPanel2);
+
+        panel.add(Box.createVerticalStrut(10));
 
         panel.add(Box.createVerticalGlue());
 
@@ -99,19 +137,173 @@ public class MatrixCalculator {
 
     private JPanel createOutputPanel() {
 
-        JPanel panel = new JPanel(new BorderLayout());
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setOpaque(false);
 
-        JLabel title = new JLabel("Calculation", SwingConstants.CENTER);
+        JLabel title = new JLabel("Calculation");
         title.setFont(new Font("Monospaced", Font.BOLD, 30));
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JTextArea outputArea = new JTextArea();
         outputArea.setEditable(false);
-        outputArea.setFont(new Font("Monospaced", Font.PLAIN, 18));
 
-        panel.add(title, BorderLayout.NORTH);
-        panel.add(new JScrollPane(outputArea), BorderLayout.CENTER);
+        // Operations
+        JButton addButton = new JButton("Addition");
+        addButton.addActionListener(e -> {
+
+            if (matrixFields == null || matrixFields2 == null) {
+                JOptionPane.showMessageDialog(calculatorFrame, "Please create both matrices first.");
+                return;
+            }
+
+            int[][] matrix = getMatrix(matrixFields);
+            int[][] matrix2 = getMatrix(matrixFields2);
+
+            if (matrix == null || matrix2 == null) {
+                return;
+            }
+
+            int[][] result = Matrix.addition(matrix, matrix2, matrix.length, matrix[0].length);
+
+            outputArea.setText(matrixToString(result));
+            
+        });
+
+        JButton subtractButton = new JButton("Subtraction");
+        subtractButton.addActionListener(e -> {
+
+            if (matrixFields == null || matrixFields2 == null) {
+                JOptionPane.showMessageDialog(calculatorFrame, "Please create both matrices first.");
+                return;
+            }
+
+            int[][] matrix = getMatrix(matrixFields);
+            int[][] matrix2 = getMatrix(matrixFields2);
+
+            if (matrix == null || matrix2 == null) {
+                return;
+            }
+
+            int[][] result = Matrix.subtraction(matrix, matrix2, matrix.length, matrix[0].length);
+
+            outputArea.setText(matrixToString(result));
+
+        });
+
+        JButton multiplyButton = new JButton("Multiply");
+        multiplyButton.addActionListener(e -> {
+
+        if (matrixFields == null || matrixFields2 == null) {
+                JOptionPane.showMessageDialog(calculatorFrame, "Please create both matrices first.");
+                return;
+            }
+
+            int[][] matrix = getMatrix(matrixFields);
+            int[][] matrix2 = getMatrix(matrixFields2);
+
+            if (matrix == null || matrix2 == null) {
+                return;
+            }
+
+            int[][] result = Matrix.matrixMultiplication(matrix, matrix2, matrix.length, matrix[0].length, matrix2.length, matrix2[0].length);
+
+            outputArea.setText(matrixToString(result));
+
+        });
+
+        JButton transposeButton = new JButton("Transpose");
+        transposeButton.addActionListener(e -> {
+            int[][] matrix = getMatrix(matrixFields);
+            int[][] result = Matrix.transpose(matrix, matrix.length, matrix[0].length);
+        
+            outputArea.setText(matrixToString(result));
+        });
+
+        JButton determinantButton = new JButton("Determinant");
+        determinantButton.addActionListener(e -> {
+            int[][] matrix = getMatrix(matrixFields);
+            int result = Matrix.determinant(matrix);
+        
+            outputArea.setText(String.valueOf(result));
+        });
+
+        JButton gaussianButton = new JButton("Guassian Elimination");
+
+        panel.add(title);
+        panel.add(Box.createVerticalStrut(20));
+
+        panel.add(addButton);
+        panel.add(subtractButton);
+        panel.add(multiplyButton);
+        panel.add(transposeButton);
+        panel.add(determinantButton);
+        panel.add(gaussianButton);
+
+        panel.add(Box.createVerticalStrut(20));
+        panel.add(new JScrollPane(outputArea));
 
         return panel;
+
+    }
+
+    private JTextField[][] createMatrixGrid(JPanel panel, int rows, int cols) {
+
+        // Remove previous matrix (if necessary)
+        panel.removeAll();
+
+        // Create new layout
+        panel.setLayout(new GridLayout(rows, cols, 5, 5));
+
+        JTextField[][] fields = new JTextField[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                fields[i][j] = new JTextField(3);
+                panel.add(fields[i][j]);
+            }
+        }
+
+        // Refresh the panel
+        panel.revalidate();
+        panel.repaint();
+
+        return fields;
+
+    }
+
+    // Method to convert text fields into int[][]
+    private int[][] getMatrix(JTextField[][] fields) {
+
+        int rows = fields.length;
+        int cols = fields[0].length;
+
+        int[][] matrix = new int[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                try {
+                    matrix[i][j] = Integer.parseInt(fields[i][j].getText());
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(calculatorFrame, "Pelase enter valid integers in every matrix cell");
+                    return null;
+                }
+            }
+        }
+
+        return matrix;
+    }
+
+    private String matrixToString(int[][] matrix) {
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int[] row : matrix) {
+            for (int value : row) {
+                sb.append(String.format("%6d", value));
+            }
+            sb.append("\n ");
+        }
+
+        return sb.toString();
     }
 }
