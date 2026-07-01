@@ -228,7 +228,13 @@ public class MatrixCalculator {
             outputArea.setText(String.valueOf(result));
         });
 
-        JButton gaussianButton = new JButton("Guassian Elimination");
+        JButton reducedRowEchelonFormButton = new JButton("Reduced Row Echelon Form");
+        reducedRowEchelonFormButton.addActionListener(e -> {
+            int[][] matrix = getMatrix(matrixFields);
+            double[][] result = Matrix.reducedRowEchelonForm(matrix);
+        
+            outputArea.setText(matrixToString(result));
+        });
 
         panel.add(title);
         panel.add(Box.createVerticalStrut(20));
@@ -238,7 +244,7 @@ public class MatrixCalculator {
         panel.add(multiplyButton);
         panel.add(transposeButton);
         panel.add(determinantButton);
-        panel.add(gaussianButton);
+        panel.add(reducedRowEchelonFormButton);
 
         panel.add(Box.createVerticalStrut(20));
         panel.add(new JScrollPane(outputArea));
@@ -300,6 +306,25 @@ public class MatrixCalculator {
         for (int[] row : matrix) {
             for (int value : row) {
                 sb.append(String.format("%6d", value));
+            }
+            sb.append("\n ");
+        }
+
+        return sb.toString();
+    }
+
+    private String matrixToString(double[][] matrix) {
+
+        StringBuilder sb = new StringBuilder();
+
+        for (double[] row : matrix) {
+            for (double value : row) {
+
+                if (Math.abs(value - Math.round(value)) < 1e-9) {
+                    sb.append(String.format("%6d", (int) Math.round(value)));
+                } else {
+                sb.append(String.format("%8.3f", value));
+                }
             }
             sb.append("\n ");
         }
