@@ -1,49 +1,87 @@
 public class Matrix {
 
-    public static int[][] addition(int[][] matrixOne, int[][] matrixTwo, int r1, int c1) {
+    private static void validateSameDimensions(int[][] matrix1, int[][] matrix2) {
 
-        int[][] result = new int[r1][c1];
+        if (matrix1 == null || matrix2 == null) {
+            throw new IllegalArgumentException("Matrices cannot be null.");
+        }
+
+        if (matrix1.length == 0 || matrix2.length == 0) {
+            throw new IllegalArgumentException("Matrices cannot be empty.");
+        }
+
+        if (matrix1.length != matrix2.length || matrix1[0].length != matrix2[0].length) {
+            throw new IllegalArgumentException("Matrices must have the same dimensions.");
+        }
+    }
+
+    public static int[][] addition(int[][] matrix1, int[][] matrix2) {
+
+        validateSameDimensions(matrix1, matrix2);
+
+        int rows = matrix1.length;
+        int cols = matrix1[0].length;
+
+        int[][] result = new int[rows][cols];
         
-        for (int i = 0; i < r1; i++) {
-            for (int j = 0; j < c1; j++) {
-                result[i][j] = matrixOne[i][j] + matrixTwo[i][j];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = matrix1[i][j] + matrix2[i][j];
             }
         }
         return result;
     }
 
-    public static int[][] subtraction(int[][] matrixOne, int[][] matrixTwo, int r1, int c1) {
+    public static int[][] subtraction(int[][] matrix1, int[][] matrix2) {
 
-        int[][] result = new int[r1][c1];
+        validateSameDimensions(matrix1, matrix2);
+
+        int rows = matrix1.length;
+        int cols = matrix1[0].length;
+
+        int[][] result = new int[rows][cols];
         
-        for (int i = 0; i < r1; i++) {
-            for (int j = 0; j < c1; j++) {
-                result[i][j] = matrixOne[i][j] - matrixTwo[i][j];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = matrix1[i][j] - matrix2[i][j];
             }
         }
         return result;
     }
 
-    public static int[][] scalarMultiplication(int[][]matrixOne, int r1, int c1, int scalar) {
+    public static int[][] scalarMultiplication(int[][]matrix, int scalar) {
 
-        int[][] result = new int[r1][c1];
+        int rows = matrix.length;
+        int cols = matrix[0].length;
 
-        for (int i = 0; i < r1; i++) {
-            for (int j = 0; j < c1; j++) {
-                result[i][j] = matrixOne[i][j] * scalar;
+        int[][] result = new int[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = matrix[i][j] * scalar;
             }
         }
         return result;
     }
 
-    public static int[][] matrixMultiplication(int[][] matrixOne, int[][] matrixTwo, int r1, int c1, int r2, int c2) {
+    public static int[][] matrixMultiplication(int[][] matrix1, int[][] matrix2) {
+
+        int r1 = matrix1.length;
+        int r2 = matrix2.length;
+
+        int c1 = matrix1[0].length;
+        int c2 = matrix2[0].length;
+
+        if (r2 != c1) {
+            throw new IllegalArgumentException("Matrices cannot be multiplied.");
+        }
 
         int[][] result = new int[r1][c2];
 
         for (int i = 0; i < r1; i++) {
             for (int j = 0; j < c2; j++) {
                 for (int k = 0; k < r2; k++) {
-                    result[i][j] += matrixOne[i][k] * matrixTwo[k][j];
+                    result[i][j] += matrix1[i][k] * matrix2[k][j];
                 }
             }
         }
@@ -172,6 +210,15 @@ public class Matrix {
 
         return result;
     }
+
+    /* 
+    public static double[][] inverse(int[][] matrix) {
+
+        int n = matrix.length;
+
+        
+    }
+    */
 
 
 }

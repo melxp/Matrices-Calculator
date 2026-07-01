@@ -5,10 +5,10 @@ public class MatrixCalculator {
 
     private JFrame calculatorFrame;
 
-    private JPanel matrixPanel;
+    private JPanel matrixPanel1;
     private JPanel matrixPanel2;
 
-    private JTextField[][] matrixFields;
+    private JTextField[][] matrixFields1;
     private JTextField[][] matrixFields2;
 
     public MatrixCalculator() {
@@ -38,25 +38,25 @@ public class MatrixCalculator {
         panel.setOpaque(false);
 
         // Matrix 1
-        JLabel matrixLabel = new JLabel("Matrix 1");
-        matrixLabel.setFont(new Font("Monospaced", Font.BOLD, 18));
+        JLabel matrixLabel1 = new JLabel("Matrix 1");
+        matrixLabel1.setFont(new Font("Monospaced", Font.BOLD, 18));
 
-        JLabel rowLabel = new JLabel("Rows");
-        JSpinner rowSpinner = new JSpinner (new SpinnerNumberModel(2, 1, 10, 1));
+        JLabel rowLabel1 = new JLabel("Rows");
+        JSpinner rowSpinner1 = new JSpinner (new SpinnerNumberModel(2, 1, 10, 1));
         
-        JLabel colLabel = new JLabel("Columns");
-        JSpinner colSpinner = new JSpinner (new SpinnerNumberModel(2, 1, 10, 1));
+        JLabel colLabel1 = new JLabel("Columns");
+        JSpinner colSpinner1 = new JSpinner (new SpinnerNumberModel(2, 1, 10, 1));
         
-        JButton createMatrixButton = new JButton("Create Matrix");
-        createMatrixButton.addActionListener(e -> {
-            int rows = (Integer) rowSpinner.getValue();
-            int cols = (Integer) colSpinner.getValue();
-            matrixFields = createMatrixGrid(matrixPanel, rows, cols);
+        JButton createMatrixButton1 = new JButton("Create Matrix");
+        createMatrixButton1.addActionListener(e -> {
+            int rows1 = (Integer) rowSpinner1.getValue();
+            int cols1 = (Integer) colSpinner1.getValue();
+            matrixFields1 = createMatrixGrid(matrixPanel1, rows1, cols1);
         });
 
-        matrixPanel = new JPanel();
-        matrixPanel.setPreferredSize(new Dimension(200, 200));
-        matrixPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        matrixPanel1 = new JPanel();
+        matrixPanel1.setPreferredSize(new Dimension(200, 200));
+        matrixPanel1.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
         // Matrix 2
         JLabel matrixLabel2 = new JLabel("Matrix 2");
@@ -86,24 +86,24 @@ public class MatrixCalculator {
             new MatrixHome();
         });
 
-        panel.add(matrixLabel);
+        panel.add(matrixLabel1);
         panel.add(Box.createVerticalStrut(10));
 
-        panel.add(rowLabel);
-        panel.add(rowSpinner);
-
-        panel.add(Box.createVerticalStrut(10));
-
-        panel.add(colLabel);
-        panel.add(colSpinner);
+        panel.add(rowLabel1);
+        panel.add(rowSpinner1);
 
         panel.add(Box.createVerticalStrut(10));
 
-        panel.add(createMatrixButton);
+        panel.add(colLabel1);
+        panel.add(colSpinner1);
 
         panel.add(Box.createVerticalStrut(10));
 
-        panel.add(matrixPanel);
+        panel.add(createMatrixButton1);
+
+        panel.add(Box.createVerticalStrut(10));
+
+        panel.add(matrixPanel1);
 
         panel.add(Box.createVerticalStrut(10));
 
@@ -152,61 +152,79 @@ public class MatrixCalculator {
         JButton addButton = new JButton("Addition");
         addButton.addActionListener(e -> {
 
-            if (matrixFields == null || matrixFields2 == null) {
-                JOptionPane.showMessageDialog(calculatorFrame, "Please create both matrices first.");
-                return;
+            try {
+
+                if (matrixFields1 == null || matrixFields2 == null) {
+                    JOptionPane.showMessageDialog(calculatorFrame, "Please create both matrices first.");
+                    return;
+                }
+
+                int[][] matrix1 = getMatrix(matrixFields1);
+                int[][] matrix2 = getMatrix(matrixFields2);
+
+                if (matrix1 == null || matrix2 == null) {
+                    return;
+                }
+
+                int[][] result = Matrix.addition(matrix1, matrix2);
+
+                outputArea.setText(matrixToString(result));
+
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(calculatorFrame, ex.getMessage());
             }
-
-            int[][] matrix = getMatrix(matrixFields);
-            int[][] matrix2 = getMatrix(matrixFields2);
-
-            if (matrix == null || matrix2 == null) {
-                return;
-            }
-
-            int[][] result = Matrix.addition(matrix, matrix2, matrix.length, matrix[0].length);
-
-            outputArea.setText(matrixToString(result));
             
         });
 
         JButton subtractButton = new JButton("Subtraction");
         subtractButton.addActionListener(e -> {
 
-            if (matrixFields == null || matrixFields2 == null) {
-                JOptionPane.showMessageDialog(calculatorFrame, "Please create both matrices first.");
-                return;
+            try {
+
+                if (matrixFields1 == null || matrixFields2 == null) {
+                    JOptionPane.showMessageDialog(calculatorFrame, "Please create both matrices first.");
+                    return;
+                }
+
+                int[][] matrix1 = getMatrix(matrixFields1);
+                int[][] matrix2 = getMatrix(matrixFields2);
+
+                if (matrix1 == null || matrix2 == null) {
+                    return;
+                }
+
+                int[][] result = Matrix.subtraction(matrix1, matrix2);
+
+                outputArea.setText(matrixToString(result));
+
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(calculatorFrame, ex.getMessage());
             }
 
-            int[][] matrix = getMatrix(matrixFields);
-            int[][] matrix2 = getMatrix(matrixFields2);
+        });
 
-            if (matrix == null || matrix2 == null) {
-                return;
-            }
+        JButton scalarMultiplicationButton = new JButton("Scalar Multiplication");
+        scalarMultiplicationButton.addActionListener(e -> {
 
-            int[][] result = Matrix.subtraction(matrix, matrix2, matrix.length, matrix[0].length);
-
-            outputArea.setText(matrixToString(result));
 
         });
 
         JButton multiplyButton = new JButton("Multiply");
         multiplyButton.addActionListener(e -> {
 
-        if (matrixFields == null || matrixFields2 == null) {
+        if (matrixFields1 == null || matrixFields2 == null) {
                 JOptionPane.showMessageDialog(calculatorFrame, "Please create both matrices first.");
                 return;
             }
 
-            int[][] matrix = getMatrix(matrixFields);
+            int[][] matrix1 = getMatrix(matrixFields1);
             int[][] matrix2 = getMatrix(matrixFields2);
 
-            if (matrix == null || matrix2 == null) {
+            if (matrix1 == null || matrix2 == null) {
                 return;
             }
 
-            int[][] result = Matrix.matrixMultiplication(matrix, matrix2, matrix.length, matrix[0].length, matrix2.length, matrix2[0].length);
+            int[][] result = Matrix.matrixMultiplication(matrix1, matrix2);
 
             outputArea.setText(matrixToString(result));
 
@@ -214,7 +232,7 @@ public class MatrixCalculator {
 
         JButton transposeButton = new JButton("Transpose");
         transposeButton.addActionListener(e -> {
-            int[][] matrix = getMatrix(matrixFields);
+            int[][] matrix = getMatrix(matrixFields1);
             int[][] result = Matrix.transpose(matrix, matrix.length, matrix[0].length);
         
             outputArea.setText(matrixToString(result));
@@ -222,7 +240,7 @@ public class MatrixCalculator {
 
         JButton determinantButton = new JButton("Determinant");
         determinantButton.addActionListener(e -> {
-            int[][] matrix = getMatrix(matrixFields);
+            int[][] matrix = getMatrix(matrixFields1);
             int result = Matrix.determinant(matrix);
         
             outputArea.setText(String.valueOf(result));
@@ -230,7 +248,7 @@ public class MatrixCalculator {
 
         JButton reducedRowEchelonFormButton = new JButton("Reduced Row Echelon Form");
         reducedRowEchelonFormButton.addActionListener(e -> {
-            int[][] matrix = getMatrix(matrixFields);
+            int[][] matrix = getMatrix(matrixFields1);
             double[][] result = Matrix.reducedRowEchelonForm(matrix);
         
             outputArea.setText(matrixToString(result));
@@ -241,6 +259,7 @@ public class MatrixCalculator {
 
         panel.add(addButton);
         panel.add(subtractButton);
+        panel.add(scalarMultiplicationButton);
         panel.add(multiplyButton);
         panel.add(transposeButton);
         panel.add(determinantButton);
