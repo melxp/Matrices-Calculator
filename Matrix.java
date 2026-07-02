@@ -1,22 +1,54 @@
-public class Matrix {
+public final class Matrix {
+
+    private static void validateDimensions(int[][] matrix) {
+
+        if (matrix == null) {
+            throw new IllegalArgumentException("Matrix cannot be null.");
+        }
+
+        if (matrix.length == 0) {
+            throw new IllegalArgumentException("Matrix cannot be empty.");
+        }
+
+        int cols = matrix[0].length;
+
+        if (cols == 0) {
+            throw new IllegalArgumentException("Matrix cannot have empty rows.");
+        }
+
+        for (int[] row : matrix) {
+            if (row == null || row.length != cols) {
+                throw  new IllegalArgumentException("Matrix must be rectangular.");
+            }
+        }
+
+    }
 
     private static void validateSameDimensions(int[][] matrix1, int[][] matrix2) {
-
-        if (matrix1 == null || matrix2 == null) {
-            throw new IllegalArgumentException("Matrices cannot be null.");
-        }
-
-        if (matrix1.length == 0 || matrix2.length == 0) {
-            throw new IllegalArgumentException("Matrices cannot be empty.");
-        }
 
         if (matrix1.length != matrix2.length || matrix1[0].length != matrix2[0].length) {
             throw new IllegalArgumentException("Matrices must have the same dimensions.");
         }
     }
 
+    private static void validateMultiplicationDimensions(int[][] matrix1, int[][] matrix2) {
+
+        if (matrix1[0].length != matrix2.length) {
+            throw new IllegalArgumentException("The number of columns in the first matrix must equal the number of rows in the second matrix.");
+        }
+    }
+
+    private static void validateSquareDimensions(int[][] matrix) {
+
+        if (matrix.length != matrix[0].length) {
+            throw new IllegalArgumentException("Matrix must be square.");
+        }
+    }
+
     public static int[][] addition(int[][] matrix1, int[][] matrix2) {
 
+        validateDimensions(matrix1);
+        validateDimensions(matrix2);
         validateSameDimensions(matrix1, matrix2);
 
         int rows = matrix1.length;
@@ -34,6 +66,8 @@ public class Matrix {
 
     public static int[][] subtraction(int[][] matrix1, int[][] matrix2) {
 
+        validateDimensions(matrix1);
+        validateDimensions(matrix2);
         validateSameDimensions(matrix1, matrix2);
 
         int rows = matrix1.length;
@@ -51,6 +85,8 @@ public class Matrix {
 
     public static int[][] scalarMultiplication(int[][]matrix, int scalar) {
 
+        validateDimensions(matrix);
+
         int rows = matrix.length;
         int cols = matrix[0].length;
 
@@ -64,23 +100,34 @@ public class Matrix {
         return result;
     }
 
+    public static int[][] scalarDivision(int[][]matrix, int scalar) {
+
+        validateDimensions(matrix);
+
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+
+        int[][] result = new int[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = matrix[i][j] / scalar;
+            }
+        }
+        return result;
+    }
+
     public static int[][] matrixMultiplication(int[][] matrix1, int[][] matrix2) {
 
-        int r1 = matrix1.length;
-        int r2 = matrix2.length;
+        validateDimensions(matrix1);
+        validateDimensions(matrix2);
+        validateMultiplicationDimensions(matrix1, matrix2);
 
-        int c1 = matrix1[0].length;
-        int c2 = matrix2[0].length;
+        int[][] result = new int[matrix1.length][matrix2[0].length];
 
-        if (r2 != c1) {
-            throw new IllegalArgumentException("Matrices cannot be multiplied.");
-        }
-
-        int[][] result = new int[r1][c2];
-
-        for (int i = 0; i < r1; i++) {
-            for (int j = 0; j < c2; j++) {
-                for (int k = 0; k < r2; k++) {
+        for (int i = 0; i < matrix1.length; i++) {
+            for (int j = 0; j < matrix2[0].length; j++) {
+                for (int k = 0; k < matrix2.length; k++) {
                     result[i][j] += matrix1[i][k] * matrix2[k][j];
                 }
             }
@@ -88,53 +135,61 @@ public class Matrix {
         return result;
     }
 
-    public static int[][] transpose(int[][] matrixOne, int r1, int c1) {
+    public static int[][] transpose(int[][] matrix) {
 
-        int[][] result = new int[c1][r1];
+        validateDimensions(matrix);
 
-        for (int i = 0; i < r1; i++) {
-            for (int j = 0; j < c1; j++) {
-                result[j][i] = matrixOne[i][j];
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+
+        int[][] result = new int[cols][rows];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[j][i] = matrix[i][j];
             }
         }
         return result;
     }
 
-    public static int determinant(int[][] matrixOne) {
+    public static int determinant(int[][] matrix) {
 
-        int n = matrixOne.length;
+        validateDimensions(matrix);
+        validateSquareDimensions(matrix);
+
+        int n = matrix.length;
         int determinant = 0;
 
         if (n == 1) {
-            return matrixOne[0][0];
+            return matrix[0][0];
         }
 
         if (n == 2) {
-            determinant = matrixOne[0][0]*matrixOne[1][1] - matrixOne[0][1]*matrixOne[1][0];
+            determinant = matrix[0][0]*matrix[1][1] - matrix[0][1]*matrix[1][0];
             return determinant;
         }
 
         for (int column = 0; column < n; column++) {
             int sign = (column % 2 == 0) ? 1 : -1;
 
-            determinant += sign * matrixOne[0][column] * determinant(getMinor(matrixOne, 0, column));
+            determinant += sign * matrix[0][column] * determinant(getMinor(matrix, 0, column));
         }
 
         return determinant;
     }
 
-    private static int[][] getMinor(int[][] matrixOne, int row, int column) {
-        int[][] minor = new int[matrixOne.length - 1][matrixOne.length - 1];
+    private static int[][] getMinor(int[][] matrix, int row, int column) {
+        int[][] minor = new int[matrix.length - 1][matrix.length - 1];
 
         int r = 0;
-        for (int i = 0; i < matrixOne.length; i++) {
+        for (int i = 0; i < matrix.length; i++) {
             if (i == row) continue;
 
             int c = 0;
-            for (int j = 0; j < matrixOne.length; j++) {
+            for (int j = 0; j < matrix.length; j++) {
                 if (j == column) continue;
 
-                minor[r][c] = matrixOne[i][j];
+                minor[r][c] = matrix[i][j];
                 c++;
             }
             r++;
@@ -142,7 +197,70 @@ public class Matrix {
         return minor;
     }
 
+    public static double[][] inverse(int[][] matrix) {
+
+        validateDimensions(matrix);
+        validateSquareDimensions(matrix);
+
+        int n = matrix.length;
+
+        // Check determinant
+        if (determinant(matrix) == 0) {
+            throw new IllegalArgumentException("Matrix is not invertible as the determinant is equal to 0.");
+        }
+
+        // Build augmented matrix [A | I]
+        double[][] augmentedMatrix = new double[n][2 * n];
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                augmentedMatrix[i][j] = matrix[i][j];
+            }
+            augmentedMatrix[i][i + n] = 1;
+        }
+
+        // Gaussian elimination
+        for (int pivot = 0; pivot < n; pivot++) {
+
+            double pivotVal = augmentedMatrix[pivot][pivot];
+
+            if (Math.abs(pivotVal) < 1e-9) {
+                throw new IllegalArgumentException("Matrix is a singular or poorly conditioned.");
+            }
+
+            for (int j = 0; j < 2 * n; j++) {
+                augmentedMatrix[pivot][j] /= pivotVal;
+            }
+
+            for (int i = 0; i < n; i++) {
+                if (i == pivot) continue;
+
+                double factor = augmentedMatrix[i][pivot];
+
+                for (int j = 0; j < 2 * n; j++) {
+                    augmentedMatrix[i][j] -= factor * augmentedMatrix[pivot][j];
+
+                    if (Math.abs(augmentedMatrix[i][j]) < 1e-9) {
+                        augmentedMatrix[i][j] = 0;
+                    }
+                }
+            }
+        }
+
+        // Extract inverse matrix
+        double[][] result = new double[n][n];
+
+        for (int i = 0; i < n; i++) {
+            System.arraycopy(augmentedMatrix[i], n, result[i], 0, n);
+        }
+
+        return result;
+        
+    }
+    
     public static double[][] reducedRowEchelonForm(int[][] matrix) {
+
+        validateDimensions(matrix);
 
         int rows = matrix.length;
         int cols = matrix[0].length;
@@ -211,14 +329,8 @@ public class Matrix {
         return result;
     }
 
-    /* 
-    public static double[][] inverse(int[][] matrix) {
 
-        int n = matrix.length;
-
-        
-    }
-    */
+    
 
 
 }

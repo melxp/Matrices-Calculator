@@ -209,31 +209,43 @@ public class MatrixCalculator {
 
         });
 
+        JButton scalarDivisionButton = new JButton("Scalar Division");
+        scalarDivisionButton.addActionListener(e -> {
+
+
+        });
+
         JButton multiplyButton = new JButton("Multiply");
         multiplyButton.addActionListener(e -> {
 
-        if (matrixFields1 == null || matrixFields2 == null) {
-                JOptionPane.showMessageDialog(calculatorFrame, "Please create both matrices first.");
-                return;
+            try {
+
+                if (matrixFields1 == null || matrixFields2 == null) {
+                    JOptionPane.showMessageDialog(calculatorFrame, "Please create both matrices first.");
+                    return;
+                }
+
+                int[][] matrix1 = getMatrix(matrixFields1);
+                int[][] matrix2 = getMatrix(matrixFields2);
+
+                if (matrix1 == null || matrix2 == null) {
+                    return;
+                }
+
+                int[][] result = Matrix.matrixMultiplication(matrix1, matrix2);
+
+                outputArea.setText(matrixToString(result));
+
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(calculatorFrame, ex.getMessage());
             }
-
-            int[][] matrix1 = getMatrix(matrixFields1);
-            int[][] matrix2 = getMatrix(matrixFields2);
-
-            if (matrix1 == null || matrix2 == null) {
-                return;
-            }
-
-            int[][] result = Matrix.matrixMultiplication(matrix1, matrix2);
-
-            outputArea.setText(matrixToString(result));
 
         });
 
         JButton transposeButton = new JButton("Transpose");
         transposeButton.addActionListener(e -> {
             int[][] matrix = getMatrix(matrixFields1);
-            int[][] result = Matrix.transpose(matrix, matrix.length, matrix[0].length);
+            int[][] result = Matrix.transpose(matrix);
         
             outputArea.setText(matrixToString(result));
         });
@@ -244,6 +256,14 @@ public class MatrixCalculator {
             int result = Matrix.determinant(matrix);
         
             outputArea.setText(String.valueOf(result));
+        });
+
+        JButton inverseButton = new JButton("Inverse");
+        inverseButton.addActionListener(e -> {
+            int[][] matrix = getMatrix(matrixFields1);
+            double[][] result = Matrix.inverse(matrix);
+        
+            outputArea.setText(matrixToString(result));
         });
 
         JButton reducedRowEchelonFormButton = new JButton("Reduced Row Echelon Form");
@@ -263,6 +283,7 @@ public class MatrixCalculator {
         panel.add(multiplyButton);
         panel.add(transposeButton);
         panel.add(determinantButton);
+        panel.add(inverseButton);
         panel.add(reducedRowEchelonFormButton);
 
         panel.add(Box.createVerticalStrut(20));
