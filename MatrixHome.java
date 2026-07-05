@@ -87,8 +87,8 @@ public class MatrixHome {
             new Color(240, 240, 245),
             new Color(220, 220, 225)
         );
-        startButton.setPreferredSize(new Dimension(220, 60));
-        startButton.setMaximumSize(new Dimension(220, 60));
+        startButton.setPreferredSize(new Dimension(200, 50));
+        startButton.setMaximumSize(new Dimension(200, 50));
         startButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         startButton.addActionListener(e -> {
@@ -124,6 +124,11 @@ public class MatrixHome {
         helpButton.setPreferredSize(new Dimension(30, 30));
         helpButton.setBackground(Color.BLACK);
         helpButton.setForeground(Color.WHITE);
+
+        helpButton.addActionListener(e -> {
+            frame.dispose(); // Close home page
+            new MatrixHelp(); // Open help page
+        });
 
         bottomPanel.add(copyright, BorderLayout.WEST);
         bottomPanel.add(helpButton, BorderLayout.EAST);

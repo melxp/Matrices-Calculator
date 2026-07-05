@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
 import java.awt.*;
 
 public class MatrixCalculator {
@@ -21,10 +23,39 @@ public class MatrixCalculator {
 
         calculatorFrame.setLayout(new BorderLayout());
 
-        calculatorFrame.getContentPane().setBackground(Color.PINK);
+        calculatorFrame.getContentPane().setBackground(new Color(165, 197, 208));
 
         calculatorFrame.add(createInputPanel(), BorderLayout.WEST);
         calculatorFrame.add(createOutputPanel(), BorderLayout.CENTER);
+
+        // Create bottom panel
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.setBackground(Color.WHITE);
+        bottomPanel.setBorder(new EmptyBorder(5, 8, 5, 8));
+
+        JLabel copyright = new JLabel("@2026 Melanie Pritchard. All Rights Reserved.");
+        copyright.setFont(new Font("SansSerif", Font.PLAIN, 12));
+
+        RoundedButton helpButton = new RoundedButton(
+            "?",
+            Color.WHITE,
+            Color.BLACK,
+            new Color(40, 40, 45),
+            new Color(60, 60, 65)     
+        );
+        helpButton.setPreferredSize(new Dimension(30, 30));
+        helpButton.setBackground(Color.BLACK);
+        helpButton.setForeground(Color.WHITE);
+
+        helpButton.addActionListener(e -> {
+            calculatorFrame.dispose(); // Close calculator
+            new MatrixHelp(); // Open help page
+        });
+
+        bottomPanel.add(copyright, BorderLayout.WEST);
+        bottomPanel.add(helpButton, BorderLayout.EAST);
+
+        calculatorFrame.add(bottomPanel, BorderLayout.SOUTH);
 
         calculatorFrame.setVisible(true);
     }
@@ -47,7 +78,14 @@ public class MatrixCalculator {
         JLabel colLabel1 = new JLabel("Columns");
         JSpinner colSpinner1 = new JSpinner (new SpinnerNumberModel(2, 1, 10, 1));
         
-        JButton createMatrixButton1 = new JButton("Create Matrix");
+        RoundedButton createMatrixButton1 = new RoundedButton(
+            "Create Matrix",
+            Color.BLACK,
+            Color.WHITE,
+            new Color(240, 240, 245),
+            new Color(220, 220, 225)
+        );
+
         createMatrixButton1.addActionListener(e -> {
             int rows1 = (Integer) rowSpinner1.getValue();
             int cols1 = (Integer) colSpinner1.getValue();
@@ -68,7 +106,14 @@ public class MatrixCalculator {
         JLabel colLabel2 = new JLabel("Columns");
         JSpinner colSpinner2 = new JSpinner (new SpinnerNumberModel(2, 1, 10, 1));
         
-        JButton createMatrixButton2 = new JButton("Create Matrix");
+        RoundedButton createMatrixButton2 = new RoundedButton(
+            "Create Matrix",
+            Color.BLACK,
+            Color.WHITE,
+            new Color(240, 240, 245),
+            new Color(220, 220, 225)
+        );
+
         createMatrixButton2.addActionListener(e -> {
             int rows2 = (Integer) rowSpinner2.getValue();
             int cols2 = (Integer) colSpinner2.getValue();
@@ -79,7 +124,13 @@ public class MatrixCalculator {
         matrixPanel2.setPreferredSize(new Dimension(200, 200));
         matrixPanel2.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-        JButton backButton = new JButton("Back");
+        RoundedButton backButton = new RoundedButton(
+            "Back",
+            Color.BLACK,
+            Color.WHITE,
+            new Color(240, 240, 245),
+            new Color(220, 220, 225)
+        );
 
         backButton.addActionListener(e -> {
             calculatorFrame.dispose();
@@ -149,7 +200,14 @@ public class MatrixCalculator {
         outputArea.setEditable(false);
 
         // Operations
-        JButton addButton = new JButton("Addition");
+        RoundedButton addButton = new RoundedButton(
+            "Addition",
+            Color.BLACK,
+            Color.WHITE,
+            new Color(240, 240, 245),
+            new Color(220, 220, 225)
+        );
+
         addButton.addActionListener(e -> {
 
             try {
@@ -176,7 +234,14 @@ public class MatrixCalculator {
             
         });
 
-        JButton subtractButton = new JButton("Subtraction");
+        RoundedButton subtractButton = new RoundedButton(
+            "Subtraction",
+            Color.BLACK,
+            Color.WHITE,
+            new Color(240, 240, 245),
+            new Color(220, 220, 225)
+        );
+
         subtractButton.addActionListener(e -> {
 
             try {
@@ -203,19 +268,40 @@ public class MatrixCalculator {
 
         });
 
-        JButton scalarMultiplicationButton = new JButton("Scalar Multiplication");
+        RoundedButton scalarMultiplicationButton = new RoundedButton(
+            "Scalar Multiplication",
+            Color.BLACK,
+            Color.WHITE,
+            new Color(240, 240, 245),
+            new Color(220, 220, 225)
+        );
+
         scalarMultiplicationButton.addActionListener(e -> {
 
 
         });
 
-        JButton scalarDivisionButton = new JButton("Scalar Division");
+        RoundedButton scalarDivisionButton = new RoundedButton(
+            "Scalar Division",
+            Color.BLACK,
+            Color.WHITE,
+            new Color(240, 240, 245),
+            new Color(220, 220, 225)
+        );
+
         scalarDivisionButton.addActionListener(e -> {
 
 
         });
 
-        JButton multiplyButton = new JButton("Multiply");
+        RoundedButton multiplyButton = new RoundedButton(
+            "Multiply",
+            Color.BLACK,
+            Color.WHITE,
+            new Color(240, 240, 245),
+            new Color(220, 220, 225)
+        );
+
         multiplyButton.addActionListener(e -> {
 
             try {
@@ -242,7 +328,14 @@ public class MatrixCalculator {
 
         });
 
-        JButton transposeButton = new JButton("Transpose");
+        RoundedButton transposeButton = new RoundedButton(
+            "Transpose",
+            Color.BLACK,
+            Color.WHITE,
+            new Color(240, 240, 245),
+            new Color(220, 220, 225)
+        );
+
         transposeButton.addActionListener(e -> {
             double[][] matrix = getMatrix(matrixFields1);
             double[][] result = Matrix.transpose(matrix);
@@ -250,7 +343,14 @@ public class MatrixCalculator {
             outputArea.setText(matrixToString(result));
         });
 
-        JButton determinantButton = new JButton("Determinant");
+        RoundedButton determinantButton = new RoundedButton(
+            "Determinant",
+            Color.BLACK,
+            Color.WHITE,
+            new Color(240, 240, 245),
+            new Color(220, 220, 225)
+        );
+
         determinantButton.addActionListener(e -> {
             double[][] matrix = getMatrix(matrixFields1);
             int result = Matrix.determinant(matrix);
@@ -258,7 +358,14 @@ public class MatrixCalculator {
             outputArea.setText(String.valueOf(result));
         });
 
-        JButton inverseButton = new JButton("Inverse");
+        RoundedButton inverseButton = new RoundedButton(
+            "Inverse",
+            Color.BLACK,
+            Color.WHITE,
+            new Color(240, 240, 245),
+            new Color(220, 220, 225)
+        );
+
         inverseButton.addActionListener(e -> {
             double[][] matrix = getMatrix(matrixFields1);
             double[][] result = Matrix.inverse(matrix);
@@ -266,7 +373,14 @@ public class MatrixCalculator {
             outputArea.setText(matrixToString(result));
         });
 
-        JButton reducedRowEchelonFormButton = new JButton("Reduced Row Echelon Form");
+        RoundedButton reducedRowEchelonFormButton = new RoundedButton(
+            "Reduced Row Echelon Form",
+            Color.BLACK,
+            Color.WHITE,
+            new Color(240, 240, 245),
+            new Color(220, 220, 225)
+        );
+
         reducedRowEchelonFormButton.addActionListener(e -> {
             double[][] matrix = getMatrix(matrixFields1);
             double[][] result = Matrix.reducedRowEchelonForm(matrix);
@@ -292,6 +406,7 @@ public class MatrixCalculator {
         return panel;
 
     }
+
 
     private JTextField[][] createMatrixGrid(JPanel panel, int rows, int cols) {
 
@@ -337,7 +452,7 @@ public class MatrixCalculator {
         }
 
         return matrix;
-    }
+    } 
 
     private String matrixToString(double[][] matrix) {
 
