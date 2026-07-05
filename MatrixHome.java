@@ -80,11 +80,9 @@ public class MatrixHome {
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // Create start button
-        JButton startButton = new JButton("Start");
-        startButton.setFont(new Font("Monospaced", Font.PLAIN, 20));
-        startButton.setBackground(Color.WHITE);
-        startButton.setFocusPainted(false);
-        startButton.setMaximumSize(new Dimension(220, 55));
+        RoundedButton startButton = new RoundedButton("Start");
+        startButton.setPreferredSize(new Dimension(220, 60));
+        startButton.setMaximumSize(new Dimension(220, 60));
         startButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         startButton.addActionListener(e -> {
