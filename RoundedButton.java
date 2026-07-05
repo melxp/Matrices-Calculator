@@ -6,14 +6,19 @@ import java.awt.event.MouseEvent;
 public class RoundedButton extends JButton {
 
     // Colours
-    private final Color base = Color.WHITE;
-    private final Color hover = new Color(240, 240,245);
-    private final Color pressed = new Color(220, 220, 225);
+    private final Color base;
+    private final Color hover;
+    private final Color pressed;
 
-    private Color current = base;
+    private Color current;
 
-    public RoundedButton(String text) {
+    public RoundedButton(String text, Color textColour, Color base, Color hover, Color pressed) {
         super(text);
+
+        this.base = base;
+        this.hover = hover;
+        this.pressed = pressed;
+        this.current = base;
 
         // Turn off default Swing painting
         setFocusPainted(false);
@@ -22,10 +27,9 @@ public class RoundedButton extends JButton {
         setOpaque(false);
 
         setBorder(BorderFactory.createEmptyBorder());
-
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-        setForeground(Color.BLACK);
+        setForeground(textColour);
         setFont(new Font("Monospaced", Font.PLAIN, 20));
 
         // Listeners for mouse activity

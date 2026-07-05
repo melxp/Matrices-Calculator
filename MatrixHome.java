@@ -80,7 +80,13 @@ public class MatrixHome {
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // Create start button
-        RoundedButton startButton = new RoundedButton("Start");
+        RoundedButton startButton = new RoundedButton(
+            "Start",
+            Color.BLACK,
+            Color.WHITE,
+            new Color(240, 240, 245),
+            new Color(220, 220, 225)
+        );
         startButton.setPreferredSize(new Dimension(220, 60));
         startButton.setMaximumSize(new Dimension(220, 60));
         startButton.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -108,9 +114,14 @@ public class MatrixHome {
         JLabel copyright = new JLabel("@2026 Melanie Pritchard. All Rights Reserved.");
         copyright.setFont(new Font("SansSerif", Font.PLAIN, 12));
 
-        JButton helpButton = new JButton("?");
+        RoundedButton helpButton = new RoundedButton(
+            "?",
+            Color.WHITE,
+            Color.BLACK,
+            new Color(40, 40, 45),
+            new Color(60, 60, 65)     
+        );
         helpButton.setPreferredSize(new Dimension(30, 30));
-        helpButton.setFocusPainted(false);
         helpButton.setBackground(Color.BLACK);
         helpButton.setForeground(Color.WHITE);
 
