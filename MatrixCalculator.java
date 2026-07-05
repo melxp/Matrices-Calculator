@@ -159,14 +159,14 @@ public class MatrixCalculator {
                     return;
                 }
 
-                int[][] matrix1 = getMatrix(matrixFields1);
-                int[][] matrix2 = getMatrix(matrixFields2);
+                double[][] matrix1 = getMatrix(matrixFields1);
+                double[][] matrix2 = getMatrix(matrixFields2);
 
                 if (matrix1 == null || matrix2 == null) {
                     return;
                 }
 
-                int[][] result = Matrix.addition(matrix1, matrix2);
+                double[][] result = Matrix.addition(matrix1, matrix2);
 
                 outputArea.setText(matrixToString(result));
 
@@ -186,14 +186,14 @@ public class MatrixCalculator {
                     return;
                 }
 
-                int[][] matrix1 = getMatrix(matrixFields1);
-                int[][] matrix2 = getMatrix(matrixFields2);
+                double[][] matrix1 = getMatrix(matrixFields1);
+                double[][] matrix2 = getMatrix(matrixFields2);
 
                 if (matrix1 == null || matrix2 == null) {
                     return;
                 }
 
-                int[][] result = Matrix.subtraction(matrix1, matrix2);
+                double[][] result = Matrix.subtraction(matrix1, matrix2);
 
                 outputArea.setText(matrixToString(result));
 
@@ -225,14 +225,14 @@ public class MatrixCalculator {
                     return;
                 }
 
-                int[][] matrix1 = getMatrix(matrixFields1);
-                int[][] matrix2 = getMatrix(matrixFields2);
+                double[][] matrix1 = getMatrix(matrixFields1);
+                double[][] matrix2 = getMatrix(matrixFields2);
 
                 if (matrix1 == null || matrix2 == null) {
                     return;
                 }
 
-                int[][] result = Matrix.matrixMultiplication(matrix1, matrix2);
+                double[][] result = Matrix.matrixMultiplication(matrix1, matrix2);
 
                 outputArea.setText(matrixToString(result));
 
@@ -244,15 +244,15 @@ public class MatrixCalculator {
 
         JButton transposeButton = new JButton("Transpose");
         transposeButton.addActionListener(e -> {
-            int[][] matrix = getMatrix(matrixFields1);
-            int[][] result = Matrix.transpose(matrix);
+            double[][] matrix = getMatrix(matrixFields1);
+            double[][] result = Matrix.transpose(matrix);
         
             outputArea.setText(matrixToString(result));
         });
 
         JButton determinantButton = new JButton("Determinant");
         determinantButton.addActionListener(e -> {
-            int[][] matrix = getMatrix(matrixFields1);
+            double[][] matrix = getMatrix(matrixFields1);
             int result = Matrix.determinant(matrix);
         
             outputArea.setText(String.valueOf(result));
@@ -260,7 +260,7 @@ public class MatrixCalculator {
 
         JButton inverseButton = new JButton("Inverse");
         inverseButton.addActionListener(e -> {
-            int[][] matrix = getMatrix(matrixFields1);
+            double[][] matrix = getMatrix(matrixFields1);
             double[][] result = Matrix.inverse(matrix);
         
             outputArea.setText(matrixToString(result));
@@ -268,7 +268,7 @@ public class MatrixCalculator {
 
         JButton reducedRowEchelonFormButton = new JButton("Reduced Row Echelon Form");
         reducedRowEchelonFormButton.addActionListener(e -> {
-            int[][] matrix = getMatrix(matrixFields1);
+            double[][] matrix = getMatrix(matrixFields1);
             double[][] result = Matrix.reducedRowEchelonForm(matrix);
         
             outputArea.setText(matrixToString(result));
@@ -317,13 +317,13 @@ public class MatrixCalculator {
 
     }
 
-    // Method to convert text fields into int[][]
-    private int[][] getMatrix(JTextField[][] fields) {
+    // Method to convert text fields into double[][]
+    private double[][] getMatrix(JTextField[][] fields) {
 
         int rows = fields.length;
         int cols = fields[0].length;
 
-        int[][] matrix = new int[rows][cols];
+        double[][] matrix = new double[rows][cols];
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -337,20 +337,6 @@ public class MatrixCalculator {
         }
 
         return matrix;
-    }
-
-    private String matrixToString(int[][] matrix) {
-
-        StringBuilder sb = new StringBuilder();
-
-        for (int[] row : matrix) {
-            for (int value : row) {
-                sb.append(String.format("%6d", value));
-            }
-            sb.append("\n ");
-        }
-
-        return sb.toString();
     }
 
     private String matrixToString(double[][] matrix) {

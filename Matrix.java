@@ -1,6 +1,6 @@
 public final class Matrix {
 
-    private static void validateDimensions(int[][] matrix) {
+    private static void validateDimensions(double[][] matrix) {
 
         if (matrix == null) {
             throw new IllegalArgumentException("Matrix cannot be null.");
@@ -16,7 +16,7 @@ public final class Matrix {
             throw new IllegalArgumentException("Matrix cannot have empty rows.");
         }
 
-        for (int[] row : matrix) {
+        for (double[] row : matrix) {
             if (row == null || row.length != cols) {
                 throw  new IllegalArgumentException("Matrix must be rectangular.");
             }
@@ -24,28 +24,28 @@ public final class Matrix {
 
     }
 
-    private static void validateSameDimensions(int[][] matrix1, int[][] matrix2) {
+    private static void validateSameDimensions(double[][] matrix1, double[][] matrix2) {
 
         if (matrix1.length != matrix2.length || matrix1[0].length != matrix2[0].length) {
             throw new IllegalArgumentException("Matrices must have the same dimensions.");
         }
     }
 
-    private static void validateMultiplicationDimensions(int[][] matrix1, int[][] matrix2) {
+    private static void validateMultiplicationDimensions(double[][] matrix1, double[][] matrix2) {
 
         if (matrix1[0].length != matrix2.length) {
             throw new IllegalArgumentException("The number of columns in the first matrix must equal the number of rows in the second matrix.");
         }
     }
 
-    private static void validateSquareDimensions(int[][] matrix) {
+    private static void validateSquareDimensions(double[][] matrix) {
 
         if (matrix.length != matrix[0].length) {
             throw new IllegalArgumentException("Matrix must be square.");
         }
     }
 
-    public static int[][] addition(int[][] matrix1, int[][] matrix2) {
+    public static double[][] addition(double[][] matrix1, double[][] matrix2) {
 
         validateDimensions(matrix1);
         validateDimensions(matrix2);
@@ -54,7 +54,7 @@ public final class Matrix {
         int rows = matrix1.length;
         int cols = matrix1[0].length;
 
-        int[][] result = new int[rows][cols];
+        double[][] result = new double[rows][cols];
         
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -64,7 +64,7 @@ public final class Matrix {
         return result;
     }
 
-    public static int[][] subtraction(int[][] matrix1, int[][] matrix2) {
+    public static double[][] subtraction(double[][] matrix1, double[][] matrix2) {
 
         validateDimensions(matrix1);
         validateDimensions(matrix2);
@@ -73,7 +73,7 @@ public final class Matrix {
         int rows = matrix1.length;
         int cols = matrix1[0].length;
 
-        int[][] result = new int[rows][cols];
+        double[][] result = new double[rows][cols];
         
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -83,14 +83,14 @@ public final class Matrix {
         return result;
     }
 
-    public static int[][] scalarMultiplication(int[][]matrix, int scalar) {
+    public static double[][] scalarMultiplication(double[][]matrix, int scalar) {
 
         validateDimensions(matrix);
 
         int rows = matrix.length;
         int cols = matrix[0].length;
 
-        int[][] result = new int[rows][cols];
+        double[][] result = new double[rows][cols];
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -100,14 +100,14 @@ public final class Matrix {
         return result;
     }
 
-    public static int[][] scalarDivision(int[][]matrix, int scalar) {
+    public static double[][] scalarDivision(double[][]matrix, int scalar) {
 
         validateDimensions(matrix);
 
         int rows = matrix.length;
         int cols = matrix[0].length;
 
-        int[][] result = new int[rows][cols];
+        double[][] result = new double[rows][cols];
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -117,13 +117,13 @@ public final class Matrix {
         return result;
     }
 
-    public static int[][] matrixMultiplication(int[][] matrix1, int[][] matrix2) {
+    public static double[][] matrixMultiplication(double[][] matrix1, double[][] matrix2) {
 
         validateDimensions(matrix1);
         validateDimensions(matrix2);
         validateMultiplicationDimensions(matrix1, matrix2);
 
-        int[][] result = new int[matrix1.length][matrix2[0].length];
+        double[][] result = new double[matrix1.length][matrix2[0].length];
 
         for (int i = 0; i < matrix1.length; i++) {
             for (int j = 0; j < matrix2[0].length; j++) {
@@ -135,14 +135,14 @@ public final class Matrix {
         return result;
     }
 
-    public static int[][] transpose(int[][] matrix) {
+    public static double[][] transpose(double[][] matrix) {
 
         validateDimensions(matrix);
 
         int rows = matrix.length;
         int cols = matrix[0].length;
 
-        int[][] result = new int[cols][rows];
+        double[][] result = new double[cols][rows];
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -152,7 +152,7 @@ public final class Matrix {
         return result;
     }
 
-    public static int determinant(int[][] matrix) {
+    public static int determinant(double[][] matrix) {
 
         validateDimensions(matrix);
         validateSquareDimensions(matrix);
@@ -161,11 +161,11 @@ public final class Matrix {
         int determinant = 0;
 
         if (n == 1) {
-            return matrix[0][0];
+            return (int) matrix[0][0];
         }
 
         if (n == 2) {
-            determinant = matrix[0][0]*matrix[1][1] - matrix[0][1]*matrix[1][0];
+            determinant = (int) (matrix[0][0]*matrix[1][1] - matrix[0][1]*matrix[1][0]);
             return determinant;
         }
 
@@ -178,8 +178,8 @@ public final class Matrix {
         return determinant;
     }
 
-    private static int[][] getMinor(int[][] matrix, int row, int column) {
-        int[][] minor = new int[matrix.length - 1][matrix.length - 1];
+    private static double[][] getMinor(double[][] matrix, int row, int column) {
+        double[][] minor = new double[matrix.length - 1][matrix.length - 1];
 
         int r = 0;
         for (int i = 0; i < matrix.length; i++) {
@@ -197,7 +197,7 @@ public final class Matrix {
         return minor;
     }
 
-    public static double[][] inverse(int[][] matrix) {
+    public static double[][] inverse(double[][] matrix) {
 
         validateDimensions(matrix);
         validateSquareDimensions(matrix);
@@ -258,7 +258,7 @@ public final class Matrix {
         
     }
     
-    public static double[][] reducedRowEchelonForm(int[][] matrix) {
+    public static double[][] reducedRowEchelonForm(double[][] matrix) {
 
         validateDimensions(matrix);
 
