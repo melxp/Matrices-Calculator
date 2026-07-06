@@ -83,7 +83,7 @@ public final class Matrix {
         return result;
     }
 
-    public static double[][] scalarMultiplication(double[][]matrix, int scalar) {
+    public static double[][] scalarMultiplication(double[][]matrix, double scalar) {
 
         validateDimensions(matrix);
 
@@ -100,7 +100,7 @@ public final class Matrix {
         return result;
     }
 
-    public static double[][] scalarDivision(double[][]matrix, int scalar) {
+    public static double[][] scalarDivision(double[][]matrix, double scalar) {
 
         validateDimensions(matrix);
 
