@@ -1,12 +1,13 @@
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
+import java.util.concurrent.Flow;
 
 public class MatrixCalculator {
 
     private JFrame frame;
 
-    // Input Panels
+    // Input
     private JPanel matrix1Panel;
     private JPanel matrix2Panel;
 
@@ -42,7 +43,7 @@ public class MatrixCalculator {
     private JTextField scalar2Field;
 
     public MatrixCalculator() {
-        
+
         // Create calculator window frame
         frame = new JFrame("Matrix Calculator");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -61,48 +62,54 @@ public class MatrixCalculator {
     }
 
     private JPanel createMainPanel() {
-        JPanel panel = new JPanel(new GridBagLayout());
-        panel.setOpaque(false);
+
+        JPanel mainPanel = new JPanel(new BorderLayout(10, 0));
+        mainPanel.setOpaque(false);
+        mainPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+        JPanel inputWrapper = createInputPanel();
+        inputWrapper.setPreferredSize(new Dimension(300, 0));
+        mainPanel.add(inputWrapper, BorderLayout.WEST);
+
+        JPanel workspacePanel = new JPanel(new GridBagLayout());
+        workspacePanel.setOpaque(false);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        // Top Row Panels: Input, Matrix 1, Matrix 2, Both
+        // Top row 
         gbc.gridy = 0;
         gbc.gridheight = 1;
-        gbc.weighty = 0.6;
-
-        // Input panel
-        gbc.gridx = 0;
-        gbc.weightx = 1.0;
-        panel.add(createInputPanel(), gbc);
+        gbc.weighty = 0.55;
 
         // Matrix 1 panel
-        gbc.gridx = 1;
-        gbc.weightx = 0.8;
-        panel.add(createMatrix1Panel(), gbc);
+        gbc.gridx = 0;
+        gbc.weightx = 1.0;
+        workspacePanel.add(createMatrix1Panel(), gbc);
 
         // Matrix 2 panel
-        gbc.gridx = 2;
-        gbc.weightx = 0.8;
-        panel.add(createMatrix2Panel(), gbc);
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
+        workspacePanel.add(createMatrix2Panel(), gbc);
 
         // Both panel
-        gbc.gridx = 3;
-        gbc.weightx = 0.8;
-        panel.add(createBothPanel(), gbc);
+        gbc.gridx = 2;
+        gbc.weightx = 1.0;
+        workspacePanel.add(createBothPanel(), gbc);
 
-        // Bottom Row Panel: Output panel spans across columns under operational sections
+        // Bottom row
         gbc.gridy = 1;
-        gbc.gridx = 1;
+        gbc.gridx = 0;
         gbc.gridwidth = 3;
-        gbc.weightx = 2.4;
-        gbc.weighty = 0.4;
+        gbc.weightx = 3.0;
+        gbc.weighty = 0.45;
 
-        panel.add(createOutputPanel(), gbc);
+        workspacePanel.add(createOutputPanel(), gbc);
 
-        return panel;
+        mainPanel.add(workspacePanel, BorderLayout.CENTER);
+
+        return mainPanel;
     }
 
     private JPanel createSection(String title) {
@@ -128,7 +135,6 @@ public class MatrixCalculator {
         JLabel copyright = new JLabel("@2026 Melanie Pritchard. All Rights Reserved.");
         copyright.setFont(new Font("SansSerif", Font.PLAIN, 12));
 
-        // Create a wrapper for buttons to look neat on the right
         JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         actionPanel.setOpaque(false);
 
@@ -178,23 +184,49 @@ public class MatrixCalculator {
         panel.setBorder(new EmptyBorder(10, 15, 15, 15));
         panel.setOpaque(false);
 
-        // Matrix 1 Parameters
+        // Matrix 1 parameters
         JLabel matrix1Label = new JLabel("Matrix 1");
         matrix1Label.setForeground(Color.WHITE);
-        matrix1Label.setFont(new Font("Monospaced", Font.BOLD, 16));
+        matrix1Label.setFont(new Font("Monospaced", Font.BOLD, 18));
+        matrix1Label.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JLabel rows1Label = new JLabel("Rows:");
+        JPanel row1Panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        row1Panel.setOpaque(false);
+        row1Panel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JLabel rows1Label = new JLabel("Rows:      ");
         rows1Label.setForeground(Color.WHITE);
-        JSpinner rows1Spinner = new JSpinner(new SpinnerNumberModel(2, 1, 10, 1));
         
+        JSpinner rows1Spinner = new JSpinner(new SpinnerNumberModel(2, 1, 10, 1));
+        ((JSpinner.DefaultEditor) rows1Spinner.getEditor()).getTextField().setColumns(3); 
+        row1Panel.add(rows1Label);
+        row1Panel.add(rows1Spinner);
+
+
+        JPanel col1Panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        col1Panel.setOpaque(false);
+        col1Panel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
         JLabel cols1Label = new JLabel("Columns:");
         cols1Label.setForeground(Color.WHITE);
+
         JSpinner cols1Spinner = new JSpinner(new SpinnerNumberModel(2, 1, 10, 1));
-        
+        ((JSpinner.DefaultEditor) cols1Spinner.getEditor()).getTextField().setColumns(3);
+        col1Panel.add(cols1Label);
+        col1Panel.add(cols1Spinner);
+
+        JPanel buttonWrapper1 = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        buttonWrapper1.setOpaque(false);
+        buttonWrapper1.setAlignmentX(Component.LEFT_ALIGNMENT);
+
         RoundedButton createMatrix1Button = new RoundedButton(
-            "Create Matrix", Color.BLACK, Color.WHITE,
+            "Generate Matrix Grid", Color.BLACK, Color.WHITE,
             new Color(240, 240, 245), new Color(220, 220, 225)
         );
+        createMatrix1Button.setPreferredSize(new Dimension(250, 30));
+        Font smallerFont = new Font(createMatrix1Button.getFont().getName(), createMatrix1Button.getFont().getStyle(), 15);
+        createMatrix1Button.setFont(smallerFont);
+        buttonWrapper1.add(createMatrix1Button);
 
         matrix1Panel = new JPanel();
         matrix1Panel.setOpaque(false);
@@ -206,23 +238,56 @@ public class MatrixCalculator {
             matrix1Fields = createMatrixGrid(matrix1Panel, rows, cols);
         });
 
-        // Matrix 2 Parameters
+        // Wrap scroll panes
+        JScrollPane scrollMatrix1 = new JScrollPane(matrix1Panel);
+        scrollMatrix1.setOpaque(false);
+        scrollMatrix1.getViewport().setOpaque(false);
+        scrollMatrix1.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+        scrollMatrix1.setAlignmentX(Component.LEFT_ALIGNMENT);
+        scrollMatrix1.setMaximumSize(new Dimension(260, 160));
+        scrollMatrix1.setPreferredSize(new Dimension(260, 160));
+
+        // Matrix 2 parameters
         JLabel matrix2Label = new JLabel("Matrix 2");
         matrix2Label.setForeground(Color.WHITE);
-        matrix2Label.setFont(new Font("Monospaced", Font.BOLD, 16));
+        matrix2Label.setFont(new Font("Monospaced", Font.BOLD, 18));
+        matrix2Label.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JLabel rows2Label = new JLabel("Rows:");
+        JPanel row2Panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        row2Panel.setOpaque(false);
+        row2Panel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JLabel rows2Label = new JLabel("Rows:      ");
         rows2Label.setForeground(Color.WHITE);
+
         JSpinner rows2Spinner = new JSpinner(new SpinnerNumberModel(2, 1, 10, 1));
+        ((JSpinner.DefaultEditor) rows2Spinner.getEditor()).getTextField().setColumns(3);
+        row2Panel.add(rows2Label);
+        row2Panel.add(rows2Spinner);
         
+        JPanel col2Panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        col2Panel.setOpaque(false);
+        col2Panel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
         JLabel cols2Label = new JLabel("Columns:");
         cols2Label.setForeground(Color.WHITE);
+
         JSpinner cols2Spinner = new JSpinner(new SpinnerNumberModel(2, 1, 10, 1));
+        ((JSpinner.DefaultEditor) cols2Spinner.getEditor()).getTextField().setColumns(3);
+        col2Panel.add(cols2Label);
+        col2Panel.add(cols2Spinner);
+
+        JPanel buttonWrapper2 = new JPanel(new FlowLayout(FlowLayout.LEFT, 0,0));
+        buttonWrapper2.setOpaque(false);
+        buttonWrapper2.setAlignmentX(Component.LEFT_ALIGNMENT);
         
         RoundedButton createMatrix2Button = new RoundedButton(
-            "Create Matrix", Color.BLACK, Color.WHITE,
+            "Generate Matrix Grid", Color.BLACK, Color.WHITE,
             new Color(240, 240, 245), new Color(220, 220, 225)
         );
+        createMatrix2Button.setPreferredSize(new Dimension(250, 30));
+        createMatrix2Button.setFont(smallerFont);
+        buttonWrapper2.add(createMatrix2Button);
 
         matrix2Panel = new JPanel();
         matrix2Panel.setOpaque(false);
@@ -234,34 +299,36 @@ public class MatrixCalculator {
             matrix2Fields = createMatrixGrid(matrix2Panel, rows, cols);
         });
 
-        // Layout Assembly
+        JScrollPane scrollMatrix2 = new JScrollPane(matrix2Panel);
+        scrollMatrix2.setOpaque(false);
+        scrollMatrix2.getViewport().setOpaque(false);
+        scrollMatrix2.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+        scrollMatrix2.setAlignmentX(Component.LEFT_ALIGNMENT);
+        scrollMatrix2.setMaximumSize(new Dimension(260, 160));
+        scrollMatrix2.setPreferredSize(new Dimension(260, 160));
+    
+       
         panel.add(matrix1Label);
-        panel.add(Box.createVerticalStrut(5));
-        panel.add(rows1Label);
-        panel.add(rows1Spinner);
-        panel.add(Box.createVerticalStrut(3));
-        panel.add(cols1Label);
-        panel.add(cols1Spinner);
         panel.add(Box.createVerticalStrut(8));
-        panel.add(createMatrix1Button);
-        panel.add(Box.createVerticalStrut(8));
-        matrix1Panel.setMaximumSize(new Dimension(250, 150));
-        panel.add(matrix1Panel);
+        panel.add(row1Panel);
+        panel.add(Box.createVerticalStrut(4));
+        panel.add(col1Panel);
+        panel.add(Box.createVerticalStrut(10));
+        panel.add(buttonWrapper1);
+        panel.add(Box.createVerticalStrut(10));
+        panel.add(scrollMatrix1);
 
-        panel.add(Box.createVerticalStrut(20));
+        panel.add(Box.createVerticalStrut(25));
 
         panel.add(matrix2Label);
-        panel.add(Box.createVerticalStrut(5));
-        panel.add(rows2Label);
-        panel.add(rows2Spinner);
-        panel.add(Box.createVerticalStrut(3));
-        panel.add(cols2Label);
-        panel.add(cols2Spinner);
         panel.add(Box.createVerticalStrut(8));
-        panel.add(createMatrix2Button);
-        panel.add(Box.createVerticalStrut(8));
-        matrix2Panel.setMaximumSize(new Dimension(250, 150));
-        panel.add(matrix2Panel);
+        panel.add(row2Panel);
+        panel.add(Box.createVerticalStrut(4));
+        panel.add(col2Panel);
+        panel.add(Box.createVerticalStrut(10));
+        panel.add(buttonWrapper2);
+        panel.add(Box.createVerticalStrut(10));
+        panel.add(scrollMatrix2);
 
         panel.add(Box.createVerticalGlue());
         outer.add(panel, BorderLayout.CENTER);
@@ -295,7 +362,6 @@ public class MatrixCalculator {
         inverse1Button = createOperationButton("Inverse");
         rref1Button = createOperationButton("RREF");
 
-        // Set up individual Matrix 1 ActionListeners
         scalarMultiply1Button.addActionListener(e -> {
             try {
                 if (matrix1Fields == null) { JOptionPane.showMessageDialog(frame, "Create Matrix 1 first."); return; }
@@ -381,7 +447,6 @@ public class MatrixCalculator {
         inverse2Button = createOperationButton("Inverse");
         rref2Button = createOperationButton("RREF");
 
-        // Set up individual Matrix 2 ActionListeners
         scalarMultiply2Button.addActionListener(e -> {
             try {
                 if (matrix2Fields == null) { JOptionPane.showMessageDialog(frame, "Create Matrix 2 first."); return; }
