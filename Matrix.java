@@ -45,7 +45,7 @@ public final class Matrix {
         }
     }
 
-    public static double[][] addition(double[][] matrix1, double[][] matrix2) {
+    public static Calculations addition(double[][] matrix1, double[][] matrix2) {
 
         validateDimensions(matrix1);
         validateDimensions(matrix2);
@@ -55,16 +55,28 @@ public final class Matrix {
         int cols = matrix1[0].length;
 
         double[][] result = new double[rows][cols];
-        
+
+        StringBuilder sb = new StringBuilder("OPERATION: Matrix Addition\n");
+        sb.append("Adding elements entry-by-entry:\n\n");
+
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 result[i][j] = matrix1[i][j] + matrix2[i][j];
+
+                sb.append(String.format(
+                    "Cell [%d, %d]: %.2f + %.2f = %.2f\n", 
+                    (i + 1), 
+                    (j + 1), 
+                    matrix1[i][j], 
+                    matrix2[i][j],
+                    result[i][j]
+                ));
             }
         }
-        return result;
+        return new Calculations(result, sb.toString());
     }
 
-    public static double[][] subtraction(double[][] matrix1, double[][] matrix2) {
+    public static Calculations subtraction(double[][] matrix1, double[][] matrix2) {
 
         validateDimensions(matrix1);
         validateDimensions(matrix2);
@@ -74,16 +86,28 @@ public final class Matrix {
         int cols = matrix1[0].length;
 
         double[][] result = new double[rows][cols];
+
+        StringBuilder sb = new StringBuilder("OPERATION: Matrix Subtraction\n");
+        sb.append("Subtracting elements entry-by-entry:\n\n");
         
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 result[i][j] = matrix1[i][j] - matrix2[i][j];
+
+                sb.append(String.format(
+                    "Cell [%d, %d]: %.2f - %.2f = %.2f\n", 
+                    (i + 1), 
+                    (j + 1), 
+                    matrix1[i][j], 
+                    matrix2[i][j],
+                    result[i][j]
+                ));
             }
         }
-        return result;
+        return new Calculations(result, sb.toString());
     }
 
-    public static double[][] scalarMultiplication(double[][]matrix, double scalar) {
+    public static Calculations scalarMultiplication(double[][]matrix, double scalar) {
 
         validateDimensions(matrix);
 
@@ -91,16 +115,28 @@ public final class Matrix {
         int cols = matrix[0].length;
 
         double[][] result = new double[rows][cols];
+
+        StringBuilder sb = new StringBuilder("OPERATION: Scalar Multiplication\n");
+        sb.append(String.format("Multiplying every element by a scalar factor (%.2f):\n\n", scalar));
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 result[i][j] = matrix[i][j] * scalar;
+
+                sb.append(String.format(
+                    "Cell [%d, %d]: %.2f * %.2f = %.2f\n", 
+                    (i + 1), 
+                    (j + 1), 
+                    matrix[i][j], 
+                    scalar,
+                    result[i][j]
+                ));
             }
         }
-        return result;
+        return new Calculations(result, sb.toString());
     }
 
-    public static double[][] scalarDivision(double[][]matrix, double scalar) {
+    public static Calculations scalarDivision(double[][]matrix, double scalar) {
 
         validateDimensions(matrix);
 
@@ -109,33 +145,70 @@ public final class Matrix {
 
         double[][] result = new double[rows][cols];
 
+        StringBuilder sb = new StringBuilder("OPERATION: Scalar Division\n");
+        sb.append(String.format("Dividing every element by a scalar factor (%.2f):\n\n", scalar));
+
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 result[i][j] = matrix[i][j] / scalar;
+
+                sb.append(String.format(
+                    "Cell [%d, %d]: %.2f / %.2f = %.2f\n", 
+                    (i + 1), 
+                    (j + 1), 
+                    matrix[i][j], 
+                    scalar,
+                    result[i][j]
+                ));
             }
         }
-        return result;
+        return new Calculations(result, sb.toString());
     }
 
-    public static double[][] matrixMultiplication(double[][] matrix1, double[][] matrix2) {
+    public static Calculations matrixMultiplication(double[][] matrix1, double[][] matrix2) {
 
         validateDimensions(matrix1);
         validateDimensions(matrix2);
         validateMultiplicationDimensions(matrix1, matrix2);
 
-        double[][] result = new double[matrix1.length][matrix2[0].length];
+        int rows1 = matrix1.length;
+        int cols1 = matrix1[0].length;
+        int cols2 = matrix2[0].length;
 
-        for (int i = 0; i < matrix1.length; i++) {
-            for (int j = 0; j < matrix2[0].length; j++) {
-                for (int k = 0; k < matrix2.length; k++) {
-                    result[i][j] += matrix1[i][k] * matrix2[k][j];
+        double[][] result = new double[rows1][cols2];
+
+        StringBuilder sb = new StringBuilder("OPERATION: Matrix Multiplication (Dot Product)\n");
+        sb.append(String.format("Multiplying rows of Matrix 1 (%dx%d) by columns of Matrix 2 (%dx%d):\n\n", rows1, cols1, cols1, cols2));
+
+        for (int i = 0; i < rows1; i++) {
+            for (int j = 0; j < cols2; j++) {
+                sb.append(String.format("Cell [%d, %d] Calculation:\n Row %d of matrix 1 x column %d of matrix 2\n Formula: ",
+                    (i + 1), (j + 1), (i + 1), (j + 1)
+                ));
+
+                double sum = 0;
+                StringBuilder mathExpression = new StringBuilder();
+
+                for (int k = 0; k < cols1; k++) {
+                    double term = matrix1[i][k] * matrix2[k][j];
+                    sum += term;
+
+                    mathExpression.append(String.format("(%.2f * %.2f)", matrix1[i][k], matrix2[k][j]));
+
+                    if (k < cols1 - 1) {
+                        mathExpression.append(" + ");
+                    }
                 }
+                result[i][j] = sum;
+
+                sb.append(mathExpression.toString());
+                sb.append(String.format(" = %.2f\n\n", sum)) ;
             }
         }
-        return result;
+        return new Calculations(result, sb.toString());
     }
 
-    public static double[][] transpose(double[][] matrix) {
+    public static Calculations transpose(double[][] matrix) {
 
         validateDimensions(matrix);
 
@@ -144,37 +217,82 @@ public final class Matrix {
 
         double[][] result = new double[cols][rows];
 
+        StringBuilder sb = new StringBuilder("OPERATION: Matrix Transpose\n");
+        sb.append(String.format("Swapping rows and columns (%dx%d -> %dx%d):\n\n", rows, cols, cols, rows));
+
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 result[j][i] = matrix[i][j];
+
+                sb.append(String.format(
+                    "Element at [%d, %d] (%.2f) moves to [%d, %d]\n", 
+                    (i + 1), 
+                    (j + 1), 
+                    matrix[i][j], 
+                    (j + 1),
+                    (i + 1)
+                ));
             }
+            sb.append("\n");
         }
-        return result;
+        return new Calculations(result, sb.toString());
     }
 
-    public static int determinant(double[][] matrix) {
+    public static Calculations determinant(double[][] matrix) {
 
         validateDimensions(matrix);
         validateSquareDimensions(matrix);
 
+        StringBuilder sb = new StringBuilder("OPERATION: Determinant (Cofactor Expansion)\n");
         int n = matrix.length;
-        int determinant = 0;
+        sb.append(String.format("Calculating the determinant of a %dx%d matrix.\n\n", n, n));
 
+        int detResult = calculateDeterminantRecursive(matrix, sb, "");
+        
+        double[][] resultMatrix = new double[][] { { (double) detResult } };
+
+        return new Calculations(resultMatrix, sb.toString());
+    }
+
+    private static int calculateDeterminantRecursive(double[][] matrix, StringBuilder sb, String indent) {
+        int n = matrix.length;
+
+        // Base case (1x1 matrix)
         if (n == 1) {
             return (int) matrix[0][0];
         }
 
+        // Base case (2x2 matrix)
         if (n == 2) {
-            determinant = (int) (matrix[0][0]*matrix[1][1] - matrix[0][1]*matrix[1][0]);
-            return determinant;
+            int determinant2x2 = (int) (matrix[0][0]*matrix[1][1] - matrix[0][1]*matrix[1][0]);
+            sb.append(indent).append(String.format("Found 2x2 minor determinant: (%.1f * %.1f) - (%.1f * %.1f) = %d\n",
+                matrix[0][0], matrix[1][1], matrix[0][1], matrix[1][0], determinant2x2));
+            return determinant2x2;
         }
+
+        int determinant = 0;
+        sb.append(indent).append(String.format("Expanding along row 1 for a %dx%d matrix:\n", n, n));
 
         for (int column = 0; column < n; column++) {
             int sign = (column % 2 == 0) ? 1 : -1;
+            double element = matrix[0][column];
+            double[][] minor = getMinor(matrix, 0, column);
 
-            determinant += sign * matrix[0][column] * determinant(getMinor(matrix, 0, column));
+            sb.append(indent).append(String.format(" -> Term %d: Sign(%d) * Element(%1.f) * det(Minor at [1, %d])\n",
+               (column + 1), sign, element, (column + 1) 
+            ));
+
+            int minorDet = calculateDeterminantRecursive(minor, sb, indent + "    ");
+
+            int termValue = (int) (sign * element * minorDet);
+            determinant += termValue;
+
+            sb.append(indent).append(String.format("   Term %d Value = %d * %.1f * %d = %d\n",
+                (column + 1), sign, element, minorDet, termValue
+            ));
         }
 
+        sb.append(indent).append(String.format("Combined row 1 expansion result for this level = %d\n\n", determinant));
         return determinant;
     }
 
@@ -197,17 +315,23 @@ public final class Matrix {
         return minor;
     }
 
-    public static double[][] inverse(double[][] matrix) {
+    public static Calculations inverse(double[][] matrix) {
 
         validateDimensions(matrix);
         validateSquareDimensions(matrix);
 
         int n = matrix.length;
 
-        // Check determinant
-        if (determinant(matrix) == 0) {
-            throw new IllegalArgumentException("Matrix is not invertible as the determinant is equal to 0.");
+        double determinant = determinant(matrix).matrix[0][0];
+
+        StringBuilder sb = new StringBuilder("OPERATION: Multiplicative Inverse Matrix (Gauss-Jordan Elimination)\n");
+        sb.append(String.format("1. Verified Determinant: det(A) = %.4f\n", determinant));
+
+        if (Math.abs(determinant) < 1e-9) {
+            throw new IllegalArgumentException("Matrix is not invertible as the determinant is equal to 0."); 
         }
+
+        sb.append("2. Setup Augmented Matrix [A | I] by appending the Identity Matrix to the right:\n\n");
 
         // Build augmented matrix [A | I]
         double[][] augmentedMatrix = new double[n][2 * n];
@@ -228,37 +352,49 @@ public final class Matrix {
                 throw new IllegalArgumentException("Matrix is a singular or poorly conditioned.");
             }
 
+            sb.append(String.format("--- Processing Column %d (Pivot Element = %.4f) ---\n", (pivot + 1), pivotVal));
+            
+            // Normalize pivot row
+            sb.append(String.format("  * Normalize Row %d: R%d -> R%d / %.4f\n", (pivot + 1), (pivot + 1), (pivot + 1), pivotVal));
             for (int j = 0; j < 2 * n; j++) {
                 augmentedMatrix[pivot][j] /= pivotVal;
             }
 
+            // Eliminate other rows
             for (int i = 0; i < n; i++) {
                 if (i == pivot) continue;
 
                 double factor = augmentedMatrix[i][pivot];
+                if (Math.abs(factor) < 1e-9) continue; 
+
+                sb.append(String.format("  * Eliminate Row %d entry: R%d -> R%d - (%.4f * R%d)\n",
+                    (i + 1), (i + 1), (i + 1), factor, (pivot + 1)
+                ));
 
                 for (int j = 0; j < 2 * n; j++) {
                     augmentedMatrix[i][j] -= factor * augmentedMatrix[pivot][j];
 
+                    // Remove floating point errors
                     if (Math.abs(augmentedMatrix[i][j]) < 1e-9) {
                         augmentedMatrix[i][j] = 0;
                     }
                 }
             }
+            sb.append("\n");
         }
 
-        // Extract inverse matrix
+        // Extract inverse matrix from the right side
         double[][] result = new double[n][n];
 
         for (int i = 0; i < n; i++) {
             System.arraycopy(augmentedMatrix[i], n, result[i], 0, n);
         }
 
-        return result;
-        
+        sb.append("3. Extract isolated right-hand section [A^-1] as the final solution.\n");
+        return new Calculations(result, sb.toString());        
     }
     
-    public static double[][] reducedRowEchelonForm(double[][] matrix) {
+    public static Calculations reducedRowEchelonForm(double[][] matrix) {
 
         validateDimensions(matrix);
 
@@ -269,10 +405,11 @@ public final class Matrix {
         double[][] result = new double[rows][cols];
 
         for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                result[i][j] = matrix[i][j];
-            }
+            System.arraycopy(matrix[i], 0, result[i], 0, cols);
         }
+
+        StringBuilder sb = new StringBuilder("OPERATION: Reduced Row Echelon Form (RREF)\n");
+        sb.append(String.format("Performing Gaussian Elimination on a %dx%d matrix:\n\n", rows, cols));
 
         int pivotRow = 0;
 
@@ -286,13 +423,18 @@ public final class Matrix {
                 }
             }
 
-            // If entire column = 0, move to next columns
+            // If entire column below the current row = 0, move to next columns
             if (Math.abs(result[maxRow][pivotCol]) < 1e-9) {
                 continue;
             }
 
-            // Swap rows
+            sb.append(String.format("--- Processing Column %d (Pivot Row Index = %d) ---\n", (pivotCol + 1), (pivotRow + 1)));
+
+            // Swap rows if a larger pivot element was found lower down
             if (maxRow != pivotRow) {
+                sb.append(String.format("  * Swap Row %d with Row %d for largest valid partial pivot (value: %.4f).\n", 
+                    (pivotRow + 1), (maxRow + 1), result[maxRow][pivotCol]
+                ));
                 double[] temp = result[pivotRow];
                 result[pivotRow] = result[maxRow];
                 result[maxRow] = temp;
@@ -300,11 +442,14 @@ public final class Matrix {
 
             // Normalize pivot row
             double pivot = result[pivotRow][pivotCol];
+            sb.append(String.format("  * Normalize Row %d: R%d -> R%d / %.4f\n", 
+                (pivotRow + 1), (pivotRow + 1), (pivotRow + 1), pivot
+            ));
             for (int j = 0; j < cols; j++) {
                 result[pivotRow][j] /= pivot;
             }
 
-            // Eliminate every other row
+            // Eliminate every other row (above and below pivot)
             for (int i = 0; i < rows; i++) {
 
                 if (i == pivotRow) {
@@ -312,6 +457,13 @@ public final class Matrix {
                 }
 
                 double factor = result[i][pivotCol];
+                if (Math.abs(factor) < 1e-9) {
+                    continue;
+                }
+
+                sb.append(String.format("  * Row Sweep: R%d -> R%d - (%.4f * R%d)\n", 
+                    (i + 1), (i + 1), factor, (pivotRow + 1)
+                ));
 
                 for (int j = 0; j < cols; j++) {
                     result[i][j] -= factor * result[pivotRow][j];
@@ -322,15 +474,12 @@ public final class Matrix {
                     }
                 }
             }
-
+            sb.append("\n");
             pivotRow++;
         }
 
-        return result;
+        sb.append("Completed elimination. The system has reached its reduced row echelon form matrix state.\n");
+        return new Calculations(result, sb.toString());
     }
-
-
-    
-
 
 }

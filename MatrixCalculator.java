@@ -1,7 +1,6 @@
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
-import java.util.concurrent.Flow;
 
 public class MatrixCalculator {
 
@@ -342,13 +341,16 @@ public class MatrixCalculator {
         JPanel panel = new JPanel();
         panel.setOpaque(false);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBorder(new EmptyBorder(15, 15, 15, 15));
+        panel.setBorder(new EmptyBorder(10, 15, 15, 15));
 
         JLabel scalarLabel = new JLabel("Scalar:");
         scalarLabel.setForeground(Color.WHITE);
+        scalarLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        scalarLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         scalar1Field = new JTextField();
-        scalar1Field.setMaximumSize(new Dimension(180, 30));
+        scalar1Field.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        scalar1Field.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         panel.add(scalarLabel);
         panel.add(Box.createVerticalStrut(5));
@@ -368,7 +370,8 @@ public class MatrixCalculator {
                 double[][] m1 = getMatrix(matrix1Fields);
                 if (m1 == null) return;
                 double scalar = Double.parseDouble(scalar1Field.getText());
-                outputArea.setText(matrixToString(Matrix.scalarMultiplication(m1, scalar)));
+                Calculations outcome = Matrix.scalarMultiplication(m1, scalar);
+                displayResultWithSteps(outcome);
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(frame, "Please enter a valid scalar numeric value.");
             }
@@ -380,7 +383,8 @@ public class MatrixCalculator {
                 double[][] m1 = getMatrix(matrix1Fields);
                 if (m1 == null) return;
                 double scalar = Double.parseDouble(scalar1Field.getText());
-                outputArea.setText(matrixToString(Matrix.scalarDivision(m1, scalar)));
+                Calculations outcome = Matrix.scalarDivision(m1, scalar);
+                displayResultWithSteps(outcome);
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(frame, "Please enter a valid scalar numeric value.");
             }
@@ -389,25 +393,45 @@ public class MatrixCalculator {
         transpose1Button.addActionListener(e -> {
             if (matrix1Fields == null) { JOptionPane.showMessageDialog(frame, "Create Matrix 1 first."); return; }
             double[][] m1 = getMatrix(matrix1Fields);
-            if (m1 != null) outputArea.setText(matrixToString(Matrix.transpose(m1)));
+            if (m1 != null) {
+                Calculations outcome = Matrix.transpose(m1);
+                displayResultWithSteps(outcome);
+            }
         });
 
         determinant1Button.addActionListener(e -> {
             if (matrix1Fields == null) { JOptionPane.showMessageDialog(frame, "Create Matrix 1 first."); return; }
             double[][] m1 = getMatrix(matrix1Fields);
-            if (m1 != null) outputArea.setText(String.valueOf(Matrix.determinant(m1)));
+            if (m1 != null) {
+                try {
+                    Calculations outcome = Matrix.determinant(m1);
+                    displayResultWithSteps(outcome);
+                } catch (IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(frame, ex.getMessage());
+                }
+            }
         });
-
+ 
         inverse1Button.addActionListener(e -> {
             if (matrix1Fields == null) { JOptionPane.showMessageDialog(frame, "Create Matrix 1 first."); return; }
             double[][] m1 = getMatrix(matrix1Fields);
-            if (m1 != null) outputArea.setText(matrixToString(Matrix.inverse(m1)));
+            if (m1 != null) {
+                try {
+                    Calculations outcome = Matrix.inverse(m1);
+                    displayResultWithSteps(outcome);
+                } catch(IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(frame, ex.getMessage());
+                }
+            }
         });
 
         rref1Button.addActionListener(e -> {
             if (matrix1Fields == null) { JOptionPane.showMessageDialog(frame, "Create Matrix 1 first."); return; }
             double[][] m1 = getMatrix(matrix1Fields);
-            if (m1 != null) outputArea.setText(matrixToString(Matrix.reducedRowEchelonForm(m1)));
+            if (m1 != null) {
+                Calculations outcome = Matrix.reducedRowEchelonForm(m1);
+                displayResultWithSteps(outcome);
+            }
         });
 
         panel.add(scalarMultiply1Button); panel.add(Box.createVerticalStrut(8));
@@ -417,6 +441,7 @@ public class MatrixCalculator {
         panel.add(inverse1Button);         panel.add(Box.createVerticalStrut(8));
         panel.add(rref1Button);
         
+        panel.add(Box.createVerticalGlue());
         outer.add(panel, BorderLayout.CENTER);
         return outer;
     }
@@ -427,13 +452,16 @@ public class MatrixCalculator {
         JPanel panel = new JPanel();
         panel.setOpaque(false);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBorder(new EmptyBorder(15, 15, 15, 15));
+        panel.setBorder(new EmptyBorder(10, 15, 15, 15));
 
         JLabel scalarLabel = new JLabel("Scalar:");
         scalarLabel.setForeground(Color.WHITE);
+        scalarLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        scalarLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         scalar2Field = new JTextField();
         scalar2Field.setMaximumSize(new Dimension(180, 30));
+        scalar2Field.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         panel.add(scalarLabel);
         panel.add(Box.createVerticalStrut(5));
@@ -453,7 +481,8 @@ public class MatrixCalculator {
                 double[][] m2 = getMatrix(matrix2Fields);
                 if (m2 == null) return;
                 double scalar = Double.parseDouble(scalar2Field.getText());
-                outputArea.setText(matrixToString(Matrix.scalarMultiplication(m2, scalar)));
+                Calculations outcome = Matrix.scalarMultiplication(m2, scalar);
+                displayResultWithSteps(outcome);
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(frame, "Please enter a valid scalar numeric value.");
             }
@@ -465,7 +494,8 @@ public class MatrixCalculator {
                 double[][] m2 = getMatrix(matrix2Fields);
                 if (m2 == null) return;
                 double scalar = Double.parseDouble(scalar2Field.getText());
-                outputArea.setText(matrixToString(Matrix.scalarDivision(m2, scalar)));
+                Calculations outcome = Matrix.scalarDivision(m2, scalar);
+                displayResultWithSteps(outcome);;
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(frame, "Please enter a valid scalar numeric value.");
             }
@@ -474,25 +504,45 @@ public class MatrixCalculator {
         transpose2Button.addActionListener(e -> {
             if (matrix2Fields == null) { JOptionPane.showMessageDialog(frame, "Create Matrix 2 first."); return; }
             double[][] m2 = getMatrix(matrix2Fields);
-            if (m2 != null) outputArea.setText(matrixToString(Matrix.transpose(m2)));
+            if (m2 != null) {
+                Calculations outcome = Matrix.transpose(m2);
+                displayResultWithSteps(outcome);
+            }
         });
 
         determinant2Button.addActionListener(e -> {
             if (matrix2Fields == null) { JOptionPane.showMessageDialog(frame, "Create Matrix 2 first."); return; }
             double[][] m2 = getMatrix(matrix2Fields);
-            if (m2 != null) outputArea.setText(String.valueOf(Matrix.determinant(m2)));
+            if (m2 != null) {
+                try {
+                    Calculations outcome = Matrix.determinant(m2);
+                    displayResultWithSteps(outcome);
+                } catch (IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(frame, ex.getMessage());
+                }
+            }
         });
 
         inverse2Button.addActionListener(e -> {
             if (matrix2Fields == null) { JOptionPane.showMessageDialog(frame, "Create Matrix 2 first."); return; }
             double[][] m2 = getMatrix(matrix2Fields);
-            if (m2 != null) outputArea.setText(matrixToString(Matrix.inverse(m2)));
+            if (m2 != null) {
+                try {
+                    Calculations outcome = Matrix.inverse(m2);
+                    displayResultWithSteps(outcome);
+                } catch(IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(frame, ex.getMessage());
+                }
+            }
         });
 
         rref2Button.addActionListener(e -> {
             if (matrix2Fields == null) { JOptionPane.showMessageDialog(frame, "Create Matrix 2 first."); return; }
             double[][] m2 = getMatrix(matrix2Fields);
-            if (m2 != null) outputArea.setText(matrixToString(Matrix.reducedRowEchelonForm(m2)));
+            if (m2 != null) {
+                Calculations outcome = Matrix.reducedRowEchelonForm(m2);
+                displayResultWithSteps(outcome);
+            }
         });
 
         panel.add(scalarMultiply2Button); panel.add(Box.createVerticalStrut(8));
@@ -502,6 +552,7 @@ public class MatrixCalculator {
         panel.add(inverse2Button);         panel.add(Box.createVerticalStrut(8));
         panel.add(rref2Button);
         
+        panel.add(Box.createVerticalGlue());
         outer.add(panel, BorderLayout.CENTER);
         return outer;
     }
@@ -512,7 +563,29 @@ public class MatrixCalculator {
         JPanel panel = new JPanel();
         panel.setOpaque(false);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBorder(new EmptyBorder(15, 15, 15, 15));
+        panel.setBorder(new EmptyBorder(10, 15, 15, 15));
+
+        JLabel formatLabel = new JLabel("Format:");
+        formatLabel.setForeground(Color.WHITE);
+        formatLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JLabel format1Label = new JLabel("Matrix 1 + Matrix 2");
+        format1Label.setForeground(Color.WHITE);
+        format1Label.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JLabel format2Label = new JLabel("Matrix 1 - Matrix 2");
+        format2Label.setForeground(Color.WHITE);
+        format2Label.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JLabel format3Label = new JLabel("Matrix 1 * Matrix 2");
+        format3Label.setForeground(Color.WHITE);
+        format3Label.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        panel.add(formatLabel);
+        panel.add(format1Label);
+        panel.add(format2Label);
+        panel.add(format3Label);
+        panel.add(Box.createVerticalStrut(20));
 
         addButton = createOperationButton("Add");
         addButton.addActionListener(e -> {
@@ -525,7 +598,9 @@ public class MatrixCalculator {
                 double[][] m2 = getMatrix(matrix2Fields);
                 if (m1 == null || m2 == null) return;
 
-                outputArea.setText(matrixToString(Matrix.addition(m1, m2)));
+                Calculations outcome = Matrix.addition(m1, m2);
+                displayResultWithSteps(outcome);
+
             } catch(Exception ex) {
                 JOptionPane.showMessageDialog(frame, ex.getMessage());
             }
@@ -542,7 +617,9 @@ public class MatrixCalculator {
                 double[][] m2 = getMatrix(matrix2Fields);
                 if (m1 == null || m2 == null) return;
 
-                outputArea.setText(matrixToString(Matrix.subtraction(m1, m2)));
+                Calculations outcome = Matrix.subtraction(m1, m2);
+                displayResultWithSteps(outcome);
+
             } catch(Exception ex) {
                 JOptionPane.showMessageDialog(frame, ex.getMessage());
             }
@@ -559,19 +636,21 @@ public class MatrixCalculator {
                 double[][] m2 = getMatrix(matrix2Fields);
                 if (m1 == null || m2 == null) return;
 
-                outputArea.setText(matrixToString(Matrix.matrixMultiplication(m1, m2)));
+                Calculations outcome = Matrix.matrixMultiplication(m1, m2);
+                displayResultWithSteps(outcome);
+
             } catch(Exception ex) {
                 JOptionPane.showMessageDialog(frame, ex.getMessage());
             }
         });
 
-        panel.add(Box.createVerticalStrut(10));
         panel.add(addButton);
-        panel.add(Box.createVerticalStrut(12));
+        panel.add(Box.createVerticalStrut(8));
         panel.add(subtractButton);
-        panel.add(Box.createVerticalStrut(12));
+        panel.add(Box.createVerticalStrut(8));
         panel.add(multiplyButton);
         
+        panel.add(Box.createVerticalGlue());
         outer.add(panel, BorderLayout.CENTER);
         return outer;
     }
@@ -584,8 +663,8 @@ public class MatrixCalculator {
             new Color(240, 240, 245),
             new Color(220, 220, 225)
         );
-        button.setMaximumSize(new Dimension(180, 40));
-        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+        button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        button.setAlignmentX(Component.LEFT_ALIGNMENT);
         return button;    
     }
 
@@ -658,5 +737,29 @@ public class MatrixCalculator {
             sb.append("\n");
         }
         return sb.toString();
+    }
+
+    private void displayResultWithSteps(Calculations calc) {
+        StringBuilder formatBuilder = new StringBuilder();
+        formatBuilder.append("====================================================================\n");
+        formatBuilder.append(" CALCULATION STEPS LOGS\n");
+        formatBuilder.append("====================================================================\n");
+        formatBuilder.append(calc.steps).append("\n");
+        formatBuilder.append("====================================================================\n");
+
+        if (calc.matrix.length == 1 && calc.matrix[0].length == 1) {
+            formatBuilder.append(" FINAL OUTPUT ANSWER\n");
+            formatBuilder.append("====================================================================\n");
+            formatBuilder.append(String.format(" Determinant = %.0f\n", calc.matrix[0][0]));
+        } else {
+            formatBuilder.append(" FINAL OUTPUT ANSWER GRID\n");
+            formatBuilder.append("====================================================================\n");
+            formatBuilder.append(matrixToString(calc.matrix));
+        }
+
+        formatBuilder.append("====================================================================\n");
+        
+        outputArea.setText(formatBuilder.toString());
+        outputArea.setCaretPosition(0); // Automatically snaps the view scroll bar back to the top
     }
 }
