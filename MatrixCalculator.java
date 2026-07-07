@@ -1,6 +1,10 @@
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.tools.Tool;
+
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 
 public class MatrixCalculator {
 
@@ -674,16 +678,28 @@ public class MatrixCalculator {
             BorderFactory.createMatteBorder(2, 2, 2, 2, Color.WHITE),
             BorderFactory.createEmptyBorder(10, 10, 10, 10)
         ));
-
+        
         outputArea = new JTextArea();
         outputArea.setEditable(false);
-        outputArea.setFont(new Font("Monospaced", Font.PLAIN, 18));
+        outputArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
         outputArea.setMargin(new Insets(10, 10, 10, 10));
 
         JScrollPane scroll = new JScrollPane(outputArea);
         scroll.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-        outer.add(scroll, BorderLayout.CENTER);
+        // Create the Copy Button and place it at the Bottom (South)
+        JButton copyButton = new JButton("Copy to Clipboard");
+        copyButton.setFont(new Font("Monospaced", Font.BOLD, 12));
+        copyButton.setBackground(Color.WHITE);
+        copyButton.setFocusable(false);
+        
+        // Link the button click directly to your utility method
+        copyButton.addActionListener(e -> copyOutputToClipboard());
+
+        // Arrange components inside the layout grid sequentially
+        outer.add(scroll, BorderLayout.CENTER); // Text remains safely in the middle
+        outer.add(copyButton, BorderLayout.SOUTH); // Button sets cleanly right beneath it
+
         return outer;
     }
 
@@ -761,5 +777,20 @@ public class MatrixCalculator {
         
         outputArea.setText(formatBuilder.toString());
         outputArea.setCaretPosition(0); // Automatically snaps the view scroll bar back to the top
+    }
+
+    private void copyOutputToClipboard() {
+        String textToCopy = outputArea.getText();
+
+        if (textToCopy == null || textToCopy.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(frame, "The output box is empty.");
+            return;
+        }
+
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        StringSelection selection = new StringSelection(textToCopy);
+        clipboard.setContents(selection, selection);
+
+        JOptionPane.showMessageDialog(frame, "Output successfully copied to clipboard.");
     }
 }
