@@ -1,6 +1,5 @@
 import javax.swing.*;
 import javax.swing.border.*;
-import javax.tools.Tool;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
@@ -53,6 +52,7 @@ public class MatrixCalculator {
         frame.setSize(1100, 850);
         frame.setLocationRelativeTo(null); // Centre window
 
+        // Set background colour
         JPanel background = new JPanel(new BorderLayout());
         background.setBackground(new Color(165, 197, 208));
 
@@ -64,24 +64,29 @@ public class MatrixCalculator {
         frame.setVisible(true);
     }
 
+    // Create the layout for the UI, seperating the screen into inputs (left) and outputs (right)
     private JPanel createMainPanel() {
 
+        // Create root panel for all inputs and outputs
         JPanel mainPanel = new JPanel(new BorderLayout(10, 0));
-        mainPanel.setOpaque(false);
-        mainPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+        mainPanel.setOpaque(false); // Make panel transparent
+        mainPanel.setBorder(new EmptyBorder(5, 5, 5, 5)); // Add padding to panel
 
+        // Create input panel
         JPanel inputWrapper = createInputPanel();
         inputWrapper.setPreferredSize(new Dimension(300, 0));
         mainPanel.add(inputWrapper, BorderLayout.WEST);
 
+        // Create operations and output panel
         JPanel workspacePanel = new JPanel(new GridBagLayout());
         workspacePanel.setOpaque(false);
 
+        // Set alignment constraints 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.BOTH;
+        gbc.fill = GridBagConstraints.BOTH; // Expand components to fill assigned grid cells
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        // Top row 
+        // Top row (matrix operations)
         gbc.gridy = 0;
         gbc.gridheight = 1;
         gbc.weighty = 0.55;
@@ -101,7 +106,7 @@ public class MatrixCalculator {
         gbc.weightx = 1.0;
         workspacePanel.add(createBothPanel(), gbc);
 
-        // Bottom row
+        // Bottom row (output)
         gbc.gridy = 1;
         gbc.gridx = 0;
         gbc.gridwidth = 3;
@@ -115,32 +120,43 @@ public class MatrixCalculator {
         return mainPanel;
     }
 
+    // Create the sub-sections for operations 
     private JPanel createSection(String title) {
+
+        // Create boxed section
         JPanel panel = new JPanel();
         panel.setOpaque(false);
         panel.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.WHITE));
         panel.setLayout(new BorderLayout());
 
+        // Create section heading
         JLabel heading = new JLabel(title);
         heading.setForeground(Color.WHITE);
         heading.setFont(new Font("Monospaced", Font.BOLD, 24));
         heading.setBorder(new EmptyBorder(8, 8, 8, 8));
 
         panel.add(heading, BorderLayout.NORTH);
+
         return panel;
     }
 
+    // Create footer for copyright and navigation buttons
     private JPanel createFooter() {
+
+        // Create panel for footer
         JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.setBackground(Color.WHITE);
         bottomPanel.setBorder(new EmptyBorder(5, 8, 5, 8));
 
+        // Create label for copyright text (left)
         JLabel copyright = new JLabel("@2026 Melanie Pritchard. All Rights Reserved.");
         copyright.setFont(new Font("SansSerif", Font.PLAIN, 12));
 
+        // Create sub-panel for buttons
         JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         actionPanel.setOpaque(false);
 
+        // Create button to return to the home page
         RoundedButton backButton = new RoundedButton(
             "<-",
             Color.WHITE,
@@ -148,12 +164,16 @@ public class MatrixCalculator {
             new Color(240, 240, 245),
             new Color(220, 220, 225)
         );
+
         backButton.setPreferredSize(new Dimension(35, 30));
+
+        // Set action when back button is clicked
         backButton.addActionListener(e -> {
-            frame.dispose();
-            new MatrixHome();
+            frame.dispose(); // Close and destroy current window
+            new MatrixHome(); // Open new instance of home page
         });
 
+        // Create button to direct to the help page
         RoundedButton helpButton = new RoundedButton(
             "?",
             Color.WHITE,
@@ -161,13 +181,15 @@ public class MatrixCalculator {
             new Color(40, 40, 45),
             new Color(60, 60, 65)     
         );
+
         helpButton.setPreferredSize(new Dimension(30, 30));
         helpButton.setBackground(Color.BLACK);
         helpButton.setForeground(Color.WHITE);
 
+        // Set action when help button is clicked
         helpButton.addActionListener(e -> {
-            frame.dispose(); 
-            new MatrixHelp(); 
+            frame.dispose(); // Close and destroy current window
+            new MatrixHelp(); // Open new instance of help page
         });
 
         actionPanel.add(backButton);
@@ -179,20 +201,25 @@ public class MatrixCalculator {
         return bottomPanel;
     }
 
+    // Create left sidebar for user inputs
     private JPanel createInputPanel() {
+
+        // Create boxed section titled 'Input'
         JPanel outer = createSection("Input");
 
+        // Create inner panel with vertical layout
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(new EmptyBorder(10, 15, 15, 15));
         panel.setOpaque(false);
 
         // Matrix 1 parameters
-        JLabel matrix1Label = new JLabel("Matrix 1");
+        JLabel matrix1Label = new JLabel("Matrix 1"); // Header
         matrix1Label.setForeground(Color.WHITE);
         matrix1Label.setFont(new Font("Monospaced", Font.BOLD, 18));
         matrix1Label.setAlignmentX(Component.LEFT_ALIGNMENT);
 
+        // Position row input
         JPanel row1Panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
         row1Panel.setOpaque(false);
         row1Panel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -200,12 +227,14 @@ public class MatrixCalculator {
         JLabel rows1Label = new JLabel("Rows:      ");
         rows1Label.setForeground(Color.WHITE);
         
+        // Number selection for matrix rows
         JSpinner rows1Spinner = new JSpinner(new SpinnerNumberModel(2, 1, 10, 1));
         ((JSpinner.DefaultEditor) rows1Spinner.getEditor()).getTextField().setColumns(3); 
+
         row1Panel.add(rows1Label);
         row1Panel.add(rows1Spinner);
 
-
+        // Position column input
         JPanel col1Panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
         col1Panel.setOpaque(false);
         col1Panel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -213,28 +242,36 @@ public class MatrixCalculator {
         JLabel cols1Label = new JLabel("Columns:");
         cols1Label.setForeground(Color.WHITE);
 
+        // Number selection for matrix columns
         JSpinner cols1Spinner = new JSpinner(new SpinnerNumberModel(2, 1, 10, 1));
         ((JSpinner.DefaultEditor) cols1Spinner.getEditor()).getTextField().setColumns(3);
+        
         col1Panel.add(cols1Label);
         col1Panel.add(cols1Spinner);
 
+        // Position button
         JPanel buttonWrapper1 = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         buttonWrapper1.setOpaque(false);
         buttonWrapper1.setAlignmentX(Component.LEFT_ALIGNMENT);
 
+        // Create button for matrix grid generation
         RoundedButton createMatrix1Button = new RoundedButton(
             "Generate Matrix Grid", Color.BLACK, Color.WHITE,
             new Color(240, 240, 245), new Color(220, 220, 225)
         );
+
         createMatrix1Button.setPreferredSize(new Dimension(250, 30));
         Font smallerFont = new Font(createMatrix1Button.getFont().getName(), createMatrix1Button.getFont().getStyle(), 15);
         createMatrix1Button.setFont(smallerFont);
+
         buttonWrapper1.add(createMatrix1Button);
 
+        // Create panel for the matrix grid to be displayed on
         matrix1Panel = new JPanel();
         matrix1Panel.setOpaque(false);
         matrix1Panel.setBorder(BorderFactory.createLineBorder(Color.WHITE));
 
+        // Set action when creation button is clicked
         createMatrix1Button.addActionListener(e -> {
             int rows = (Integer) rows1Spinner.getValue();
             int cols = (Integer) cols1Spinner.getValue();
@@ -251,7 +288,7 @@ public class MatrixCalculator {
         scrollMatrix1.setPreferredSize(new Dimension(260, 160));
 
         // Matrix 2 parameters
-        JLabel matrix2Label = new JLabel("Matrix 2");
+        JLabel matrix2Label = new JLabel("Matrix 2"); // Header
         matrix2Label.setForeground(Color.WHITE);
         matrix2Label.setFont(new Font("Monospaced", Font.BOLD, 18));
         matrix2Label.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -265,6 +302,7 @@ public class MatrixCalculator {
 
         JSpinner rows2Spinner = new JSpinner(new SpinnerNumberModel(2, 1, 10, 1));
         ((JSpinner.DefaultEditor) rows2Spinner.getEditor()).getTextField().setColumns(3);
+        
         row2Panel.add(rows2Label);
         row2Panel.add(rows2Spinner);
         
@@ -277,6 +315,7 @@ public class MatrixCalculator {
 
         JSpinner cols2Spinner = new JSpinner(new SpinnerNumberModel(2, 1, 10, 1));
         ((JSpinner.DefaultEditor) cols2Spinner.getEditor()).getTextField().setColumns(3);
+        
         col2Panel.add(cols2Label);
         col2Panel.add(cols2Spinner);
 
@@ -288,8 +327,10 @@ public class MatrixCalculator {
             "Generate Matrix Grid", Color.BLACK, Color.WHITE,
             new Color(240, 240, 245), new Color(220, 220, 225)
         );
+
         createMatrix2Button.setPreferredSize(new Dimension(250, 30));
         createMatrix2Button.setFont(smallerFont);
+
         buttonWrapper2.add(createMatrix2Button);
 
         matrix2Panel = new JPanel();
@@ -310,7 +351,7 @@ public class MatrixCalculator {
         scrollMatrix2.setMaximumSize(new Dimension(260, 160));
         scrollMatrix2.setPreferredSize(new Dimension(260, 160));
     
-       
+       // Stack components vertically in panel
         panel.add(matrix1Label);
         panel.add(Box.createVerticalStrut(8));
         panel.add(row1Panel);
@@ -333,34 +374,42 @@ public class MatrixCalculator {
         panel.add(Box.createVerticalStrut(10));
         panel.add(scrollMatrix2);
 
-        panel.add(Box.createVerticalGlue());
+        panel.add(Box.createVerticalGlue()); // Remove empty screen height at the bottom
         outer.add(panel, BorderLayout.CENTER);
 
         return outer;
     }
 
+    // Operation selection for single-matrix operations on Matrix 1
     private JPanel createMatrix1Panel() {
+
+        // Create boxed section titled 'Matrix 1'
         JPanel outer = createSection("Matrix 1");
 
+         // Create inner panel with vertical layout
         JPanel panel = new JPanel();
         panel.setOpaque(false);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(new EmptyBorder(10, 15, 15, 15));
 
+        // Create label for input box
         JLabel scalarLabel = new JLabel("Scalar:");
         scalarLabel.setForeground(Color.WHITE);
         scalarLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
         scalarLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-
+ 
+        // Create field for user to enter scalar
         scalar1Field = new JTextField();
         scalar1Field.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
         scalar1Field.setAlignmentX(Component.LEFT_ALIGNMENT);
 
+        // Vertically stack label and text field
         panel.add(scalarLabel);
         panel.add(Box.createVerticalStrut(5));
         panel.add(scalar1Field);
         panel.add(Box.createVerticalStrut(15));
 
+        // Generate operation buttons
         scalarMultiply1Button = createOperationButton("Multiply");
         scalarDivide1Button = createOperationButton("Divide");
         transpose1Button = createOperationButton("Transpose");
@@ -368,32 +417,48 @@ public class MatrixCalculator {
         inverse1Button = createOperationButton("Inverse");
         rref1Button = createOperationButton("RREF");
 
+        // Set action when 'multiply' button is clicked
         scalarMultiply1Button.addActionListener(e -> {
             try {
+                // Check if matrix grid text fields have been generated
                 if (matrix1Fields == null) { JOptionPane.showMessageDialog(frame, "Create Matrix 1 first."); return; }
+                
+                // Parse and extract entries
                 double[][] m1 = getMatrix(matrix1Fields);
-                if (m1 == null) return;
+                if (m1 == null) return; // Exit if entries invalid
+
+                // Parse and convert text from scalar input into a double
                 double scalar = Double.parseDouble(scalar1Field.getText());
+                
+                // Execute math logic
                 Calculations outcome = Matrix.scalarMultiplication(m1, scalar);
                 displayResultWithSteps(outcome);
+
             } catch (NumberFormatException ex) {
+                // Catch empty or invalid scalar inputs
                 JOptionPane.showMessageDialog(frame, "Please enter a valid scalar numeric value.");
             }
         });
 
+        // Set action when 'divide' button is clicked
         scalarDivide1Button.addActionListener(e -> {
             try {
                 if (matrix1Fields == null) { JOptionPane.showMessageDialog(frame, "Create Matrix 1 first."); return; }
+                
                 double[][] m1 = getMatrix(matrix1Fields);
                 if (m1 == null) return;
+
                 double scalar = Double.parseDouble(scalar1Field.getText());
+
                 Calculations outcome = Matrix.scalarDivision(m1, scalar);
                 displayResultWithSteps(outcome);
+
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(frame, "Please enter a valid scalar numeric value.");
             }
         });
 
+        // Set action when 'transpose' button is clicked
         transpose1Button.addActionListener(e -> {
             if (matrix1Fields == null) { JOptionPane.showMessageDialog(frame, "Create Matrix 1 first."); return; }
             double[][] m1 = getMatrix(matrix1Fields);
@@ -403,6 +468,7 @@ public class MatrixCalculator {
             }
         });
 
+        // Set action when 'determinant' button is clicked
         determinant1Button.addActionListener(e -> {
             if (matrix1Fields == null) { JOptionPane.showMessageDialog(frame, "Create Matrix 1 first."); return; }
             double[][] m1 = getMatrix(matrix1Fields);
@@ -411,11 +477,13 @@ public class MatrixCalculator {
                     Calculations outcome = Matrix.determinant(m1);
                     displayResultWithSteps(outcome);
                 } catch (IllegalArgumentException ex) {
+                    // Catch mathematical errors - non-square matrix
                     JOptionPane.showMessageDialog(frame, ex.getMessage());
                 }
             }
         });
  
+        // Set action when 'inverse' button is clicked
         inverse1Button.addActionListener(e -> {
             if (matrix1Fields == null) { JOptionPane.showMessageDialog(frame, "Create Matrix 1 first."); return; }
             double[][] m1 = getMatrix(matrix1Fields);
@@ -424,11 +492,13 @@ public class MatrixCalculator {
                     Calculations outcome = Matrix.inverse(m1);
                     displayResultWithSteps(outcome);
                 } catch(IllegalArgumentException ex) {
+                    // Catch mathematical errors - non-square matrix
                     JOptionPane.showMessageDialog(frame, ex.getMessage());
                 }
             }
         });
 
+        // Set action when 'rref' button is clicked
         rref1Button.addActionListener(e -> {
             if (matrix1Fields == null) { JOptionPane.showMessageDialog(frame, "Create Matrix 1 first."); return; }
             double[][] m1 = getMatrix(matrix1Fields);
@@ -438,19 +508,33 @@ public class MatrixCalculator {
             }
         });
 
-        panel.add(scalarMultiply1Button); panel.add(Box.createVerticalStrut(8));
-        panel.add(scalarDivide1Button);    panel.add(Box.createVerticalStrut(8));
-        panel.add(transpose1Button);       panel.add(Box.createVerticalStrut(8));
-        panel.add(determinant1Button);     panel.add(Box.createVerticalStrut(8));
-        panel.add(inverse1Button);         panel.add(Box.createVerticalStrut(8));
+        // Vertically stack all buttons to panel
+        panel.add(scalarMultiply1Button); 
+        panel.add(Box.createVerticalStrut(8));
+
+        panel.add(scalarDivide1Button);    
+        panel.add(Box.createVerticalStrut(8));
+
+        panel.add(transpose1Button);       
+        panel.add(Box.createVerticalStrut(8));
+
+        panel.add(determinant1Button);     
+        panel.add(Box.createVerticalStrut(8));
+
+        panel.add(inverse1Button);         
+        panel.add(Box.createVerticalStrut(8));
+
         panel.add(rref1Button);
         
         panel.add(Box.createVerticalGlue());
         outer.add(panel, BorderLayout.CENTER);
+
         return outer;
     }
 
+    // Operation selection for single-matrix operations on Matrix 2
     private JPanel createMatrix2Panel() {
+
         JPanel outer = createSection("Matrix 2");
 
         JPanel panel = new JPanel();
@@ -482,11 +566,15 @@ public class MatrixCalculator {
         scalarMultiply2Button.addActionListener(e -> {
             try {
                 if (matrix2Fields == null) { JOptionPane.showMessageDialog(frame, "Create Matrix 2 first."); return; }
+                
                 double[][] m2 = getMatrix(matrix2Fields);
                 if (m2 == null) return;
+
                 double scalar = Double.parseDouble(scalar2Field.getText());
+                
                 Calculations outcome = Matrix.scalarMultiplication(m2, scalar);
                 displayResultWithSteps(outcome);
+
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(frame, "Please enter a valid scalar numeric value.");
             }
@@ -495,11 +583,15 @@ public class MatrixCalculator {
         scalarDivide2Button.addActionListener(e -> {
             try {
                 if (matrix2Fields == null) { JOptionPane.showMessageDialog(frame, "Create Matrix 2 first."); return; }
+                
                 double[][] m2 = getMatrix(matrix2Fields);
                 if (m2 == null) return;
+
                 double scalar = Double.parseDouble(scalar2Field.getText());
+                
                 Calculations outcome = Matrix.scalarDivision(m2, scalar);
-                displayResultWithSteps(outcome);;
+                displayResultWithSteps(outcome);
+
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(frame, "Please enter a valid scalar numeric value.");
             }
@@ -549,19 +641,32 @@ public class MatrixCalculator {
             }
         });
 
-        panel.add(scalarMultiply2Button); panel.add(Box.createVerticalStrut(8));
-        panel.add(scalarDivide2Button);    panel.add(Box.createVerticalStrut(8));
-        panel.add(transpose2Button);       panel.add(Box.createVerticalStrut(8));
-        panel.add(determinant2Button);     panel.add(Box.createVerticalStrut(8));
-        panel.add(inverse2Button);         panel.add(Box.createVerticalStrut(8));
+        panel.add(scalarMultiply2Button); 
+        panel.add(Box.createVerticalStrut(8));
+
+        panel.add(scalarDivide2Button);    
+        panel.add(Box.createVerticalStrut(8));
+
+        panel.add(transpose2Button);       
+        panel.add(Box.createVerticalStrut(8));
+
+        panel.add(determinant2Button);     
+        panel.add(Box.createVerticalStrut(8));
+
+        panel.add(inverse2Button);         
+        panel.add(Box.createVerticalStrut(8));
+
         panel.add(rref2Button);
         
         panel.add(Box.createVerticalGlue());
         outer.add(panel, BorderLayout.CENTER);
+
         return outer;
     }
 
+    //Operation selection for matrix operations with Matrix 1 and Matrix 2
     private JPanel createBothPanel() {
+
         JPanel outer = createSection("Both");
 
         JPanel panel = new JPanel();
@@ -569,6 +674,7 @@ public class MatrixCalculator {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(new EmptyBorder(10, 15, 15, 15));
 
+        // Labels to show the order for each matrix
         JLabel formatLabel = new JLabel("Format:");
         formatLabel.setForeground(Color.WHITE);
         formatLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -592,31 +698,39 @@ public class MatrixCalculator {
         panel.add(Box.createVerticalStrut(20));
 
         addButton = createOperationButton("Add");
+        // Set action when 'add' button is clicked
         addButton.addActionListener(e -> {
             try {
+                // Check text grids exist for both matrices
                 if (matrix1Fields == null || matrix2Fields == null) {
                     JOptionPane.showMessageDialog(frame, "Create both matrices first.");
                     return;
                 }
+
+                // Parse, extract, and convert values
                 double[][] m1 = getMatrix(matrix1Fields);
                 double[][] m2 = getMatrix(matrix2Fields);
-                if (m1 == null || m2 == null) return;
+                if (m1 == null || m2 == null) return; // Exit if entries invalid
 
+                // Execute math logic
                 Calculations outcome = Matrix.addition(m1, m2);
                 displayResultWithSteps(outcome);
 
             } catch(Exception ex) {
+                // Catch incomptability errors (dimension mismatch)
                 JOptionPane.showMessageDialog(frame, ex.getMessage());
             }
         });
 
         subtractButton = createOperationButton("Subtract");
+        // Set action when 'subtract' button is clicked
         subtractButton.addActionListener(e -> {
             try {
                 if (matrix1Fields == null || matrix2Fields == null) {
                     JOptionPane.showMessageDialog(frame, "Create both matrices first.");
                     return;
                 }
+
                 double[][] m1 = getMatrix(matrix1Fields);
                 double[][] m2 = getMatrix(matrix2Fields);
                 if (m1 == null || m2 == null) return;
@@ -630,12 +744,14 @@ public class MatrixCalculator {
         });
 
         multiplyButton = createOperationButton("Multiply");
+        // Set action when 'multiply' button is clicked
         multiplyButton.addActionListener(e -> {
             try {
                 if (matrix1Fields == null || matrix2Fields == null) {
                     JOptionPane.showMessageDialog(frame, "Create both matrices first.");
                     return;
                 }
+
                 double[][] m1 = getMatrix(matrix1Fields);
                 double[][] m2 = getMatrix(matrix2Fields);
                 if (m1 == null || m2 == null) return;
@@ -656,10 +772,13 @@ public class MatrixCalculator {
         
         panel.add(Box.createVerticalGlue());
         outer.add(panel, BorderLayout.CENTER);
+
         return outer;
     }
 
+    // Template to create all operation buttons
     private RoundedButton createOperationButton(String text) {
+
         RoundedButton button = new RoundedButton( 
             text, 
             Color.BLACK,
@@ -667,12 +786,16 @@ public class MatrixCalculator {
             new Color(240, 240, 245),
             new Color(220, 220, 225)
         );
+
         button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         button.setAlignmentX(Component.LEFT_ALIGNMENT);
+
         return button;    
     }
 
+    // Create bottom-right output field
     private JPanel createOutputPanel() {
+
         JPanel outer = createSection("Output");
         outer.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createMatteBorder(2, 2, 2, 2, Color.WHITE),
@@ -684,29 +807,33 @@ public class MatrixCalculator {
         outputArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
         outputArea.setMargin(new Insets(10, 10, 10, 10));
 
+        // Allow scrollable output
         JScrollPane scroll = new JScrollPane(outputArea);
         scroll.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-        // Create the Copy Button and place it at the Bottom (South)
+        // Create button to copy output text to clipboard
         JButton copyButton = new JButton("Copy to Clipboard");
         copyButton.setFont(new Font("Monospaced", Font.BOLD, 12));
         copyButton.setBackground(Color.WHITE);
         copyButton.setFocusable(false);
         
-        // Link the button click directly to your utility method
+        // Link the button click directly to utility method
         copyButton.addActionListener(e -> copyOutputToClipboard());
 
-        // Arrange components inside the layout grid sequentially
-        outer.add(scroll, BorderLayout.CENTER); // Text remains safely in the middle
-        outer.add(copyButton, BorderLayout.SOUTH); // Button sets cleanly right beneath it
+       
+        outer.add(scroll, BorderLayout.CENTER); 
+        outer.add(copyButton, BorderLayout.SOUTH); 
 
         return outer;
     }
 
+    // Generate grid layout for matrix entry
     private JTextField[][] createMatrixGrid(JPanel panel, int rows, int cols) {
-        panel.removeAll();
-        panel.setLayout(new GridLayout(rows, cols, 5, 5));
 
+        panel.removeAll(); // Reset grid
+        panel.setLayout(new GridLayout(rows, cols, 5, 5)); // Create new grid
+
+        // Adds text boxes to grid
         JTextField[][] fields = new JTextField[rows][cols];
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -715,21 +842,29 @@ public class MatrixCalculator {
             }
         }
 
-        panel.revalidate();
-        panel.repaint();
+        panel.revalidate(); // Recalculate grid
+        panel.repaint(); // Redraw changes
+
         return fields;
     }
 
+    //Convert 2D array of text fields to 2D double array for mathematical operations
     private double[][] getMatrix(JTextField[][] fields) {
+
+        // Cacuate dimensions
         int rows = fields.length;
         int cols = fields[0].length;
+
+        // Initialise array
         double[][] matrix = new double[rows][cols];
 
+        // Extract text and fill new array
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 try {
                     matrix[i][j] = Double.parseDouble(fields[i][j].getText());
                 } catch (NumberFormatException ex) {
+                    // Catch blank or invalid text boxes
                     JOptionPane.showMessageDialog(frame, "Please enter valid numbers in every matrix cell.");
                     return null;
                 }
@@ -738,13 +873,19 @@ public class MatrixCalculator {
         return matrix;
     } 
 
+    // Convert double array to formatted string block
     private String matrixToString(double[][] matrix) {
+
+        // Check matrix exists
         if (matrix == null) return "";
+
         StringBuilder sb = new StringBuilder();
 
         for (double[] row : matrix) {
             for (double value : row) {
+                // Check if value close enough to an integer
                 if (Math.abs(value - Math.round(value)) < 1e-9) {
+                    // Format value as an integer with padding to keep columns aligned
                     sb.append(String.format("%6d", (int) Math.round(value)));
                 } else {
                     sb.append(String.format("%8.3f", value));
@@ -755,7 +896,9 @@ public class MatrixCalculator {
         return sb.toString();
     }
 
+    // Output calculation with steps taken to reach the result
     private void displayResultWithSteps(Calculations calc) {
+
         StringBuilder formatBuilder = new StringBuilder();
         formatBuilder.append("====================================================================\n");
         formatBuilder.append(" CALCULATION STEPS LOGS\n");
@@ -763,10 +906,12 @@ public class MatrixCalculator {
         formatBuilder.append(calc.steps).append("\n");
         formatBuilder.append("====================================================================\n");
 
+        // If output is a number (1x1 matrix)
         if (calc.matrix.length == 1 && calc.matrix[0].length == 1) {
             formatBuilder.append(" FINAL OUTPUT ANSWER\n");
             formatBuilder.append("====================================================================\n");
             formatBuilder.append(String.format(" Determinant = %.0f\n", calc.matrix[0][0]));
+        // For every other matrix
         } else {
             formatBuilder.append(" FINAL OUTPUT ANSWER GRID\n");
             formatBuilder.append("====================================================================\n");
@@ -776,21 +921,26 @@ public class MatrixCalculator {
         formatBuilder.append("====================================================================\n");
         
         outputArea.setText(formatBuilder.toString());
-        outputArea.setCaretPosition(0); // Automatically snaps the view scroll bar back to the top
+        outputArea.setCaretPosition(0); // Return the scroll bar back to the top
     }
 
+    // Copy output text to clipboard
     private void copyOutputToClipboard() {
+
+        // Retrieve text
         String textToCopy = outputArea.getText();
 
+        // Check if text null, empty, or only white space
         if (textToCopy == null || textToCopy.trim().isEmpty()) {
             JOptionPane.showMessageDialog(frame, "The output box is empty.");
             return;
         }
 
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        StringSelection selection = new StringSelection(textToCopy);
-        clipboard.setContents(selection, selection);
+        StringSelection selection = new StringSelection(textToCopy); // Wrap raw string text
+        clipboard.setContents(selection, selection); // Overwrite current clipboard contents
 
+        // Success message to confirm text has been copied
         JOptionPane.showMessageDialog(frame, "Output successfully copied to clipboard.");
     }
 }
