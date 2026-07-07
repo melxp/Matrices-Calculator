@@ -403,7 +403,6 @@ public final class Matrix {
 
         // Copy matrix into a double matrix
         double[][] result = new double[rows][cols];
-
         for (int i = 0; i < rows; i++) {
             System.arraycopy(matrix[i], 0, result[i], 0, cols);
         }
@@ -478,7 +477,24 @@ public final class Matrix {
             pivotRow++;
         }
 
-        sb.append("Completed elimination. The system has reached its reduced row echelon form matrix state.\n");
+        sb.append("Completed elimination. The system has reached its reduced row echelon form matrix state.\n\n");
+
+        // Rank
+        int rank = 0;
+        for (int i = 0; i < rows; i++) {
+            boolean isNonZeroRow = false;
+            for (int j = 0; j < cols; j++) {
+                if (Math.abs(result[i][j]) > 1e-9) {
+                    isNonZeroRow = true;
+                    break;
+                }
+            }
+            if (isNonZeroRow) {
+                rank++;
+            }
+        }
+
+        sb.append(String.format("Matrix Rank: %d\n", rank));
         return new Calculations(result, sb.toString());
     }
 
