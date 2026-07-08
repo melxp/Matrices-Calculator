@@ -18,6 +18,7 @@ public class MatrixCalculator {
 
     // Output
     private JTextArea outputArea;
+    private double[][] lastResultMatrix;
 
     // Matrix 1 buttons
     private RoundedButton scalarMultiply1Button;
@@ -250,7 +251,7 @@ public class MatrixCalculator {
         col1Panel.add(cols1Spinner);
 
         // Position button
-        JPanel buttonWrapper1 = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        JPanel buttonWrapper1 = new JPanel(new GridLayout(2, 1, 0, 8));
         buttonWrapper1.setOpaque(false);
         buttonWrapper1.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -264,7 +265,17 @@ public class MatrixCalculator {
         Font smallerFont = new Font(createMatrix1Button.getFont().getName(), createMatrix1Button.getFont().getStyle(), 15);
         createMatrix1Button.setFont(smallerFont);
 
+        // Create button for a random matrix between 1x1 and 10x10 dimensions to be generated
+        RoundedButton randomMatrix1Button = new RoundedButton(
+            "Generate Random Matrix", Color.BLACK, Color.WHITE,
+            new Color(240, 240, 245), new Color(220, 220, 225)
+        );
+
+        randomMatrix1Button.setPreferredSize(new Dimension(250, 30));
+        randomMatrix1Button.setFont(smallerFont);
+
         buttonWrapper1.add(createMatrix1Button);
+        buttonWrapper1.add(randomMatrix1Button);
 
         // Create panel for the matrix grid to be displayed on
         matrix1Panel = new JPanel();
@@ -273,9 +284,18 @@ public class MatrixCalculator {
 
         // Set action when creation button is clicked
         createMatrix1Button.addActionListener(e -> {
-            int rows = (Integer) rows1Spinner.getValue();
-            int cols = (Integer) cols1Spinner.getValue();
-            matrix1Fields = createMatrixGrid(matrix1Panel, rows, cols);
+            boolean random = false;
+            int rows = (int) rows1Spinner.getValue();
+            int cols = (int) cols1Spinner.getValue();
+            matrix1Fields = createMatrixGrid(matrix1Panel, rows, cols, random);
+        });
+
+        // Set action when random creation button is clicked
+        randomMatrix1Button.addActionListener(e -> {
+            boolean random = true;
+            int rows = (int)(Math.random() * 10) + 1;
+            int cols = (int)(Math.random() * 10) + 1;
+            matrix1Fields = createMatrixGrid(matrix1Panel, rows, cols, random);
         });
 
         // Wrap scroll panes
@@ -319,7 +339,7 @@ public class MatrixCalculator {
         col2Panel.add(cols2Label);
         col2Panel.add(cols2Spinner);
 
-        JPanel buttonWrapper2 = new JPanel(new FlowLayout(FlowLayout.LEFT, 0,0));
+        JPanel buttonWrapper2 = new JPanel(new GridLayout(2, 1, 0, 8));
         buttonWrapper2.setOpaque(false);
         buttonWrapper2.setAlignmentX(Component.LEFT_ALIGNMENT);
         
@@ -331,16 +351,34 @@ public class MatrixCalculator {
         createMatrix2Button.setPreferredSize(new Dimension(250, 30));
         createMatrix2Button.setFont(smallerFont);
 
+        // Create button for a random matrix between 1x1 and 10x10 dimensions to be generated
+        RoundedButton randomMatrix2Button = new RoundedButton(
+            "Generate Random Matrix", Color.BLACK, Color.WHITE,
+            new Color(240, 240, 245), new Color(220, 220, 225)
+        );
+
+        randomMatrix2Button.setPreferredSize(new Dimension(250, 30));
+        randomMatrix2Button.setFont(smallerFont);
+
         buttonWrapper2.add(createMatrix2Button);
+        buttonWrapper2.add(randomMatrix2Button);
 
         matrix2Panel = new JPanel();
         matrix2Panel.setOpaque(false);
         matrix2Panel.setBorder(BorderFactory.createLineBorder(Color.WHITE));
 
         createMatrix2Button.addActionListener(e -> {
-            int rows = (Integer) rows2Spinner.getValue();
-            int cols = (Integer) cols2Spinner.getValue();
-            matrix2Fields = createMatrixGrid(matrix2Panel, rows, cols);
+            boolean random = false;
+            int rows = (int) rows2Spinner.getValue();
+            int cols = (int) cols2Spinner.getValue();
+            matrix2Fields = createMatrixGrid(matrix2Panel, rows, cols, random);
+        });
+
+        randomMatrix2Button.addActionListener(e -> {
+            boolean random = true;
+            int rows = (int)(Math.random() * 10) + 1;
+            int cols = (int)(Math.random() * 10) + 1;
+            matrix2Fields = createMatrixGrid(matrix2Panel, rows, cols, random);
         });
 
         JScrollPane scrollMatrix2 = new JScrollPane(matrix2Panel);
@@ -820,24 +858,50 @@ public class MatrixCalculator {
         // Link the button click directly to utility method
         copyButton.addActionListener(e -> copyOutputToClipboard());
 
+        // Create button to copy output matrix to Matrix 1
+        JButton copyToMatrix1Button = new JButton("Copy to Matrix 1");
+        copyToMatrix1Button.setFont(new Font("Monospaced", Font.BOLD, 12));
+        copyToMatrix1Button.setBackground(Color.WHITE);
+        copyToMatrix1Button.setFocusable(false);
+
+        copyToMatrix1Button.addActionListener(e -> copyOutputToInputGrid(1));
+
+        // Create button to copy output matrix to Matrix 2
+        JButton copyToMatrix2Button = new JButton("Copy to Matrix 2");
+        copyToMatrix2Button.setFont(new Font("Monospaced", Font.BOLD, 12));
+        copyToMatrix2Button.setBackground(Color.WHITE);
+        copyToMatrix2Button.setFocusable(false);
+
+        copyToMatrix2Button.addActionListener(e -> copyOutputToInputGrid(2));
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
+        buttonPanel.setOpaque(false);
+        buttonPanel.add(copyButton);
+        buttonPanel.add(copyToMatrix1Button);
+        buttonPanel.add(copyToMatrix2Button);
        
         outer.add(scroll, BorderLayout.CENTER); 
-        outer.add(copyButton, BorderLayout.SOUTH); 
+        outer.add(buttonPanel, BorderLayout.SOUTH); 
 
         return outer;
     }
 
     // Generate grid layout for matrix entry
-    private JTextField[][] createMatrixGrid(JPanel panel, int rows, int cols) {
+    private JTextField[][] createMatrixGrid(JPanel panel, int rows, int cols, boolean random) {
 
         panel.removeAll(); // Reset grid
         panel.setLayout(new GridLayout(rows, cols, 5, 5)); // Create new grid
 
-        // Adds text boxes to grid
         JTextField[][] fields = new JTextField[rows][cols];
+
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 fields[i][j] = new JTextField(3);
+
+                if (random) {
+                    double randomEntry = (Math.random() * 18.0) - 9.0;
+                    fields[i][j].setText(String.format("%.2f", randomEntry));
+                }
                 panel.add(fields[i][j]);
             }
         }
@@ -899,9 +963,12 @@ public class MatrixCalculator {
     // Output calculation with steps taken to reach the result
     private void displayResultWithSteps(Calculations calc) {
 
+        this.lastResultMatrix = calc.matrix;
+
         StringBuilder formatBuilder = new StringBuilder();
         formatBuilder.append("====================================================================\n");
         formatBuilder.append(" CALCULATION STEPS LOGS\n");
+        formatBuilder.append(" (All decimals rounded to 3 d.p where necessary)\n");
         formatBuilder.append("====================================================================\n");
         formatBuilder.append(calc.steps).append("\n");
         formatBuilder.append("====================================================================\n");
@@ -942,5 +1009,36 @@ public class MatrixCalculator {
 
         // Success message to confirm text has been copied
         JOptionPane.showMessageDialog(frame, "Output successfully copied to clipboard.");
+    }
+
+    // Copy output result to chosen matrix grid
+    private void copyOutputToInputGrid(int matrix) {
+
+        // Check there is an output result to copy
+        if (lastResultMatrix == null) {
+            JOptionPane.showMessageDialog(frame, "There is no calculated matrix resut");
+            return;
+        }
+
+        int rows = lastResultMatrix.length;
+        int cols = lastResultMatrix[0].length;
+
+        if (matrix == 1) {
+            matrix1Fields = createMatrixGrid(matrix1Panel, rows, cols, false);
+
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < cols; j++) {
+                    matrix1Fields[i][j].setText(String.format("%.3f", lastResultMatrix[i][j]));
+                }
+            }
+        } else if (matrix == 2) {
+            matrix2Fields = createMatrixGrid(matrix2Panel, rows, cols, false);
+
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < cols; j++) {
+                    matrix2Fields[i][j].setText(String.format("%.3f", lastResultMatrix[i][j]));
+                }
+            }
+        }
     }
 }

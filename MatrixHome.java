@@ -87,6 +87,7 @@ public class MatrixHome {
             new Color(240, 240, 245),
             new Color(220, 220, 225)
         );
+
         startButton.setPreferredSize(new Dimension(200, 50));
         startButton.setMaximumSize(new Dimension(200, 50));
         startButton.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -148,7 +149,6 @@ public class MatrixHome {
 
         // Make window visible
         frame.setVisible(true);
-        
     }
 
     public static void main(String[] args) {

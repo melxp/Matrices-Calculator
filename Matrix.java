@@ -1,5 +1,6 @@
 public final class Matrix {
 
+    
     private static void validateDimensions(double[][] matrix) {
 
         if (matrix == null) {
