@@ -3,36 +3,26 @@ import java.awt.*;
 
 public class MatrixHelp {
     
-    private JFrame helpFrame;
+    private JFrame frame;
 
     public MatrixHelp() {
 
         // Create help window frame
-        helpFrame = new JFrame("Matrix Help");
-        helpFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        helpFrame.setSize(1000, 800);
-        helpFrame.setLocationRelativeTo(null); // Centre window
+        frame = new JFrame("Matrix Calculator");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(1100, 850);
+        frame.setLocationRelativeTo(null); // Centre window
 
-        helpFrame.setLayout(new BorderLayout());
+        // Set background colour
+        JPanel background = new JPanel(new BorderLayout());
+        background.setBackground(new Color(165, 197, 208));
 
-        helpFrame.getContentPane().setBackground(new Color(165, 197, 208));
+        frame.setContentPane(background);
 
-        helpFrame.setVisible(true);
+        background.add(createMainPanel(), BorderLayout.CENTER);
+        background.add(createFooter(), BorderLayout.SOUTH);
 
-        // Create centre panel
-        JPanel centrePanel = new JPanel();
-        centrePanel.setLayout(new BoxLayout(centrePanel, BoxLayout.Y_AXIS));
-        centrePanel.setOpaque(false);
-        centrePanel.setBackground(Color.WHITE);
-
-        // 
-        JLabel titleLabel = new JLabel("Welcome");
-        titleLabel.setFont(new Font("Monospaced", Font.BOLD, 56));
-        titleLabel.setForeground(Color.WHITE);
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        helpFrame.add(centrePanel);
-        helpFrame.setVisible(true);
-
+        frame.setVisible(true);
     }
+
 }
